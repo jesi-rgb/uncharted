@@ -1,14 +1,26 @@
 <script lang="ts">
-	//import { Chart } from '$lib';
-	// or if you're testing outside the project:
-	import { Chart } from '../lib/index.js';
+	import { Chart } from '$lib/index.js';
 
 	const data = [
-		{ x: new Date('2024-01-01'), y: 10 },
-		{ x: new Date('2024-02-01'), y: 20 },
-		{ x: new Date('2024-03-01'), y: 15 },
-		{ x: new Date('2024-04-01'), y: 25 }
+		{ category: 'A', value: 10 },
+		{ category: 'B', value: 20 },
+		{ category: 'C', value: 30 }
 	];
 </script>
 
-<Chart.Root width={400} height={400} class="border border-black" {data}></Chart.Root>
+<Chart.Root data={data} width={600} height={300} xKey="category" yKey="value">
+	<Chart.Axes data={data} width={width} height={height} xKey={xKey} yKey={yKey}>
+		{#snippet x({ props, scale, label, xScale })}
+			<g {...props}>
+				<!-- Custom X-axis rendering here -->
+				<text>Custom X-Axis</text>
+			</g>
+		{/snippet}
+		<Chart.Axes.Y label="Value" />
+	</Chart.Axes>
+	<Chart.Series>
+		{#snippet children}
+			<Chart.Series.Bar color="steelblue" />
+		{/snippet}
+	</Chart.Series>
+</Chart.Root>

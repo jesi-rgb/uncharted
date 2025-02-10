@@ -1,3 +1,9 @@
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
+/* styles/theme.css */
+@import "tailwindcss";
+
+
+@plugin "daisyui" {
+	themes: cupcake --default, sunset --prefersdark;
+}
+
+@plugin '@tailwindcss/typography';
