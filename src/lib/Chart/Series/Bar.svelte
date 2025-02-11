@@ -1,5 +1,8 @@
 <script lang="ts">
-	import type { ScaleLinear, ScaleTime } from 'd3';
+	import { CHART_CONTEXT, X_AXES_CONTEXT, Y_AXES_CONTEXT } from '$lib/context.js';
+	import type { Context } from '$lib/types.js';
+	import type { ScaleBand, ScaleLinear, ScaleTime } from 'd3';
+	import { getAllContexts, getContext } from 'svelte';
 
 	interface Props<T extends { [key: string]: any }> {
 		data: T[];
@@ -10,15 +13,28 @@
 		color?: string;
 	}
 
-	let { data, xKey, yKey, xScale, yScale, color = 'steelblue' } = $props() as Props<any>;
+	const { xKey } = getContext(X_AXES_CONTEXT) as {
+		xKey: string;
+	};
+
+	const { yKey, yScale } = getContext(Y_AXES_CONTEXT) as {
+		yKey: string;
+		yScale: ScaleLinear<number, number>;
+	};
+	const { width, height, margin, data } = getContext(CHART_CONTEXT) as Context<
+		Record<string, number>
+	>;
+
+	let categories = $derived(data.map((d) => d[xKey]));
 </script>
 
-{#each data as d}
-	<rect
-		x={xScale(d[xKey])}
-		y={yScale(d[yKey])}
-		width={10}
-		height={yScale(0) - yScale(d[yKey])}
-		fill={color}
-	/>
-{/each}
+<g id="rects">
+	{#each categories as category, i}
+		<rect
+			x={xScale(category)}
+			y={yScale(data[i][yKey])}
+			height={height - margin.bottom - yScale(data[i][yKey])}
+			width={xScale.bandwidth()}
+		/>
+	{/each}
+</g>

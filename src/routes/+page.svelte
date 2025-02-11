@@ -4,23 +4,15 @@
 	const data = [
 		{ category: 'A', value: 10 },
 		{ category: 'B', value: 20 },
-		{ category: 'C', value: 30 }
+		{ category: 'C', value: 30 },
+		{ category: 'D', value: 40 },
+		{ category: 'E', value: 50 },
+		{ category: 'F', value: 60 }
 	];
 </script>
 
-<Chart.Root data={data} width={600} height={300} xKey="category" yKey="value">
-	<Chart.Axes data={data} width={width} height={height} xKey={xKey} yKey={yKey}>
-		{#snippet x({ props, scale, label, xScale })}
-			<g {...props}>
-				<!-- Custom X-axis rendering here -->
-				<text>Custom X-Axis</text>
-			</g>
-		{/snippet}
-		<Chart.Axes.Y label="Value" />
-	</Chart.Axes>
-	<Chart.Series>
-		{#snippet children}
-			<Chart.Series.Bar color="steelblue" />
-		{/snippet}
-	</Chart.Series>
+<Chart.Root {data} width={300} height={300} margin={{ left: 30, top: 10, right: 10 }}>
+	<Chart.Axes.X xKey="category" />
+	<Chart.Axes.Y yKey="value" />
+	<Chart.Series.Bar />
 </Chart.Root>

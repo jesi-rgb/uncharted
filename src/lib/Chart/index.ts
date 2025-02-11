@@ -1,5 +1,5 @@
 import Root from './Root.svelte';
-import Axes from './Axes.svelte';
+import AxesContainer from './Axes.svelte';
 import X from './Axes/X.svelte';
 import Y from './Axes/Y.svelte';
 import Series from './Series.svelte';
@@ -8,13 +8,12 @@ import Bar from './Series/Bar.svelte';
 
 export const Chart = {
 	Root,
+	AxesContainer,
 	Axes: {
-		Axes,
 		X,
 		Y
 	},
 	Series: {
-		Series,
 		Area, Bar
 	}
 };

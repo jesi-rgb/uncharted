@@ -1,43 +1,32 @@
 <script lang="ts">
-	import type { ScaleLinear, ScaleTime } from 'd3';
-	import { tickStep } from 'd3-array';
-	import { format } from 'd3-format';
-	import { timeFormat } from 'd3-time-format';
+	import { CHART_CONTEXT } from '$lib/context.js';
+	import type { Context } from '$lib/types.js';
+	import { getContext } from 'svelte';
+
+	//interface Props<T extends { [key: string]: any }> {
+	//	data: T[];
+	//	width: number;
+	//	height: number;
+	//	xKey?: keyof T;
+	//	yKey?: keyof T;
+	//	xAxis?: (args: { data: T[]; width: number; xKey?: keyof T }) => any;
+	//	yAxis?: (args: { data: T[]; height: number; yKey?: keyof T }) => any;
+	//}
 
 	interface Props {
-		scale: 'linear' | 'time';
-		label: string;
-		xScale: ScaleLinear<number, number> | ScaleTime<number, number>;
+		// it will receive two children for the x and y axis that are components
+		// themselves
+		children: {
+			xAxis;
+		};
 	}
 
-	let { scale, label, xScale } = $props() as Props;
+	let { data, width, height } = getContext(CHART_CONTEXT) as Context<Record<string, number>>;
 
-	let ticks = $derived(() => {
-		const [start, end] = xScale.domain();
-		const step = tickStep(start, end, 10);
-		return xScale.ticks(10).map((t: Date) => ({
-			value: t,
-			x: xScale(t),
-			label: scale === 'time' ? timeFormat('%Y-%m-%d')(t) : format('.2s')(t)
-		}));
-	});
+	let { children }: Props = $props();
 </script>
 
-<g class="x-axis">
-	{#each ticks as tick}
-		<line x1={tick.x} x2={tick.x} y1="0" y2="-5" stroke="currentColor" />
-		<text x={tick.x} y="-10" text-anchor="middle" dominant-baseline="hanging">
-			{tick.label}
-		</text>
-	{/each}
-	<text x="50%" y="30" text-anchor="middle" dominant-baseline="hanging">
-		{label}
-	</text>
+<g class="axes">
+	<g id="xAxis">{@render xAxis({ data, width })} </g>
+	<g id="yAxis">{@render yAxis({ data, height })} </g>
 </g>
-
-<style>
-	.x-axis {
-		transform: translate(0, 300px);
-		font-size: 10px;
-	}
-</style>

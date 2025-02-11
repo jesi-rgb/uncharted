@@ -1,34 +1,37 @@
 <script lang="ts">
-	import type { ScaleLinear } from 'd3';
-	import { tickStep } from 'd3-array';
+	import { axisLeft, scaleLinear, select, type ScaleLinear } from 'd3';
+	import { extent, tickStep } from 'd3-array';
 	import { format } from 'd3-format';
+	import { getContext, onMount, setContext } from 'svelte';
+	import type { Context } from '$lib/types.js';
+	import { CHART_CONTEXT, Y_AXES_CONTEXT } from '$lib/context.js';
 
 	interface Props {
 		label: string;
 		yScale: ScaleLinear<number, number>;
 	}
 
-	let { label, yScale } = $props() as Props;
+	let { data, height, margin } = getContext(CHART_CONTEXT) as Context<
+		{ key: string; value: number }[]
+	>;
+	let { yKey }: { yKey: string } = $props();
 
-	let ticks = $derived.by(() => {
-		const [start, end] = yScale.domain();
-		const step = tickStep(start, end, 10);
-		return yScale.ticks(10).map((t) => ({
-			value: t,
-			y: yScale(t),
-			label: format('.2s')(t)
-		}));
+	let yScale = $derived(
+		scaleLinear()
+			.domain(extent(data.map((d) => d[yKey])))
+			.range([height - margin.bottom, margin.top])
+			.nice()
+	);
+
+	let axis = $derived(axisLeft(yScale));
+
+	$effect(() => {
+		select('.yAxis').call(axis);
+	});
+
+	onMount(() => {
+		setContext(Y_AXES_CONTEXT, { yKey, yScale });
 	});
 </script>
 
-<g>
-	{#each ticks as tick}
-		<line x1="0" x2="5" y1={tick.y} y2={tick.y} stroke="currentColor" />
-		<text x="-10" y={tick.y} text-anchor="end" dominant-baseline="middle">
-			{tick.label}
-		</text>
-	{/each}
-	<text x="-15" y="50%" text-anchor="middle" dominant-baseline="hanging" transform="rotate(-90)">
-		{label}
-	</text>
-</g>
+<g class="yAxis" transform="translate({margin.left},0)"> </g>
