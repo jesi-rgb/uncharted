@@ -1,32 +1,34 @@
 <script lang="ts">
-	import { CHART_CONTEXT } from '$lib/context.js';
-	import type { Context } from '$lib/types.js';
-	import { getContext } from 'svelte';
+	import { chartContext, xAxesContext, yAxesContext } from '$lib/context.js';
+	import type { ChartContext } from '$lib/types.js';
+	import { extent, scaleBand, scaleLinear } from 'd3';
 
-	//interface Props<T extends { [key: string]: any }> {
-	//	data: T[];
-	//	width: number;
-	//	height: number;
-	//	xKey?: keyof T;
-	//	yKey?: keyof T;
-	//	xAxis?: (args: { data: T[]; width: number; xKey?: keyof T }) => any;
-	//	yAxis?: (args: { data: T[]; height: number; yKey?: keyof T }) => any;
-	//}
+	let { data, margin, width, height }: ChartContext = chartContext.get();
+	let { children, xKey, yKey } = $props();
 
-	interface Props {
-		// it will receive two children for the x and y axis that are components
-		// themselves
-		children: {
-			xAxis;
-		};
-	}
+	let xScale = $derived(
+		scaleBand()
+			.domain(extent(data.map((d) => d[xKey])))
+			.range([margin.left, width - margin.right])
+			.padding(0.3)
+	);
 
-	let { data, width, height } = getContext(CHART_CONTEXT) as Context<Record<string, number>>;
+	let xScaleWrapper = () => xScale;
 
-	let { children }: Props = $props();
+	xAxesContext.set({ xKey, xScaleWrapper });
+
+	let yScale = $derived(
+		scaleLinear()
+			.domain(extent(data.map((d) => d[yKey])))
+			.range([margin.top, height - margin.bottom])
+			.nice()
+	);
+
+	let yScaleWrapper = () => yScale;
+
+	yAxesContext.set({ yKey, yScaleWrapper });
 </script>
 
 <g class="axes">
-	<g id="xAxis">{@render xAxis({ data, width })} </g>
-	<g id="yAxis">{@render yAxis({ data, height })} </g>
+	{@render children()}
 </g>

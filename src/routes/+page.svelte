@@ -12,7 +12,10 @@
 </script>
 
 <Chart.Root {data} width={300} height={300} margin={{ left: 30, top: 10, right: 10 }}>
-	<Chart.Axes.X xKey="category" />
-	<Chart.Axes.Y yKey="value" />
-	<Chart.Series.Bar />
+	<Chart.AxesContainer xKey="category" yKey="value">
+		<Chart.Axes.Y />
+		<Chart.Axes.X />
+
+		<Chart.Series.Bar />
+	</Chart.AxesContainer>
 </Chart.Root>

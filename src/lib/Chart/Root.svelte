@@ -1,7 +1,5 @@
-<script lang="ts">
-	import { CHART_CONTEXT } from '$lib/context.js';
-	import { setContext } from 'svelte';
-	import { type Context } from '$lib/types.js';
+<script lang="ts" generics="T">
+	import { chartContext } from '$lib/context.js';
 
 	interface Props<T extends { [key: string]: any }> {
 		data: T[];
@@ -39,16 +37,9 @@
 	// combine whatever the user specifies with the default in margin
 	margin = { ...defaultMargin, ...margin };
 
-	setContext(CHART_CONTEXT, {
-		data,
-		width,
-		height,
-		margin,
-		xKey,
-		yKey
-	});
+	chartContext.set({ data, width, height, margin });
 </script>
 
-<svg {width} {height} class="border border-black/10" {...rest}>
+<svg {width} {height} class="border-base-100/10 border" {...rest}>
 	{@render children({ data, width, height, xKey, yKey })}
 </svg>

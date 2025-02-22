@@ -1,5 +1,5 @@
 
-export type Context<T> = {
+export type ChartContext<T> = {
 	data: T[];
 	width: number;
 	height: number;
