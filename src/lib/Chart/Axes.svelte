@@ -8,9 +8,9 @@
 
 	let xScale = $derived(
 		scaleBand()
-			.domain(extent(data.map((d) => d[xKey])))
+			.domain(data.map((d) => d[xKey]))
 			.range([margin.left, width - margin.right])
-			.padding(0.3)
+			.padding(0.4)
 	);
 
 	let xScaleWrapper = () => xScale;
@@ -20,8 +20,8 @@
 	let yScale = $derived(
 		scaleLinear()
 			.domain(extent(data.map((d) => d[yKey])))
-			.range([margin.top, height - margin.bottom])
-			.nice()
+			.range([height - margin.bottom, margin.top])
+			.nice(2)
 	);
 
 	let yScaleWrapper = () => yScale;

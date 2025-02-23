@@ -40,6 +40,8 @@
 	chartContext.set({ data, width, height, margin });
 </script>
 
-<svg {width} {height} class="border-base-100/10 border" {...rest}>
-	{@render children({ data, width, height, xKey, yKey })}
-</svg>
+<div bind:clientWidth={width}>
+	<svg {width} {height} class="border-base-content/10 border" {...rest}>
+		{@render children({ data, width, height, xKey, yKey })}
+	</svg>
+</div>

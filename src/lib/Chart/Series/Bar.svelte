@@ -7,7 +7,7 @@
 
 	const { xKey, xScaleWrapper } = xAxesContext.get();
 	const { yKey, yScaleWrapper } = yAxesContext.get();
-	const { width, height, margin, data } = chartContext.get();
+	const { height, margin, data } = chartContext.get();
 
 	let { color = '#69b3a2' }: Props = $props();
 
