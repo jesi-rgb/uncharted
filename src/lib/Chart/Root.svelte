@@ -35,13 +35,27 @@
 	}: Props<any> = $props();
 
 	// combine whatever the user specifies with the default in margin
-	margin = { ...defaultMargin, ...margin };
+	let computedMargin = $derived({ ...defaultMargin, ...margin });
 
-	chartContext.set({ data, width, height, margin });
+	// Set context during initialization
+	chartContext.set({
+		get data() {
+			return data;
+		},
+		get width() {
+			return width;
+		},
+		get height() {
+			return height;
+		},
+		get margin() {
+			return computedMargin;
+		}
+	});
 </script>
 
 <div bind:clientWidth={width}>
-	<svg {width} {height} class="border-base-content/10 border" {...rest}>
+	<svg {width} {height} {...rest}>
 		{@render children({ data, width, height, xKey, yKey })}
 	</svg>
 </div>

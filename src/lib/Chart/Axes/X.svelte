@@ -2,16 +2,22 @@
 	import { chartContext, xAxesContext } from '$lib/context.js';
 	import { axisBottom, select } from 'd3';
 
-	let { height, margin } = chartContext.get();
+	// Get context values during initialization
+	let chartState = chartContext.get();
+	let axesState = xAxesContext.get();
 
-	let { xScaleWrapper } = xAxesContext.get();
-
-	let xScale = xScaleWrapper();
-
+	// Create derived values that will automatically update
+	let height = $derived(chartState.height);
+	let margin = $derived(chartState.margin);
+	let xScale = $derived(axesState.xScale);
 	let axis = $derived(axisBottom(xScale));
 
+	// DOM manipulation in effect
 	$effect(() => {
-		select('.xAxis').call(axis);
+		const xAxisElement = select('.xAxis');
+		if (xAxisElement) {
+			xAxisElement.call(axis);
+		}
 	});
 </script>
 

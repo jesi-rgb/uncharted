@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { axisLeft, select, type ScaleLinear } from 'd3';
+	import { axisLeft, format, select, type ScaleLinear } from 'd3';
 	import { chartContext, yAxesContext } from '$lib/context.js';
 
 	interface Props {
@@ -7,16 +7,22 @@
 		yScale: ScaleLinear<number, number>;
 	}
 
-	let { margin } = chartContext.get();
+	// Get context values during initialization
+	let chartState = chartContext.get();
+	let axesState = yAxesContext.get();
 	let { ...rest } = $props();
 
-	let { yScaleWrapper } = yAxesContext.get();
-	let yScale = yScaleWrapper();
+	// Create derived values that will automatically update
+	let margin = $derived(chartState.margin);
+	let yScale = $derived(axesState.yScale);
+	let axis = $derived(axisLeft(yScale).tickFormat(format('~s')));
 
-	let axis = $derived(axisLeft(yScale));
-
+	// DOM manipulation in effect
 	$effect(() => {
-		select('.yAxis').call(axis);
+		const yAxisElement = select('.yAxis');
+		if (yAxisElement) {
+			yAxisElement.call(axis);
+		}
 	});
 </script>
 

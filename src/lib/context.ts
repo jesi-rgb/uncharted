@@ -8,5 +8,5 @@ export const X_AXES_CONTEXT = 'x-axes-context'
 export const Y_AXES_CONTEXT = 'y-axes-context'
 
 export const chartContext = new Context(CHART_CONTEXT)
-export const xAxesContext = new Context<{ xKey: string, xScaleWrapper: () => ScaleLinear<number, number> }>(X_AXES_CONTEXT)
-export const yAxesContext = new Context<{ yKey: string, yScaleWrapper: () => ScaleLinear<number, number> }>(Y_AXES_CONTEXT)
+export const xAxesContext = new Context<{ xKey: string, xScale: () => ScaleLinear<number, number> }>(X_AXES_CONTEXT)
+export const yAxesContext = new Context<{ yKey: string, yScale: () => ScaleLinear<number, number> }>(Y_AXES_CONTEXT)

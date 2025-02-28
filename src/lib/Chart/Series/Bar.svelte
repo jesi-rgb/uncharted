@@ -5,14 +5,12 @@
 		color?: string;
 	}
 
-	const { xKey, xScaleWrapper } = xAxesContext.get();
-	const { yKey, yScaleWrapper } = yAxesContext.get();
-	const { height, margin, data } = chartContext.get();
+	const { height, margin, data } = $derived(chartContext.get());
 
 	let { color = '#69b3a2' }: Props = $props();
 
-	let xScale = $derived(xScaleWrapper());
-	let yScale = $derived(yScaleWrapper());
+	const { xKey, xScale } = $derived(xAxesContext.get());
+	const { yKey, yScale } = $derived(yAxesContext.get());
 
 	let categories = $derived(data.map((d) => d[xKey]));
 </script>
