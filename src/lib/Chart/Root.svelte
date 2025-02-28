@@ -54,7 +54,7 @@
 	});
 </script>
 
-<div bind:clientWidth={width}>
+<div bind:clientHeight={height} bind:clientWidth={width}>
 	<svg {width} {height} {...rest}>
 		{@render children({ data, width, height, xKey, yKey })}
 	</svg>

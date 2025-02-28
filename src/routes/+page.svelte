@@ -8,7 +8,7 @@
 	function generateRandomData(
 		categories: number = 26,
 		minValue: number = 0,
-		maxValue: number = 1000
+		maxValue: number = 500
 	): DataPoint[] {
 		return Array.from({ length: categories }, (_, i) => ({
 			category: String.fromCharCode(65 + i),

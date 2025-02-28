@@ -44,6 +44,6 @@
 	});
 </script>
 
-<g class="axes">
+<g class="axes font-sans">
 	{@render children()}
 </g>

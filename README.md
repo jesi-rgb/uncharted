@@ -1,58 +1,48 @@
-# create-svelte
+# Uncharted
 
-Everything you need to build a Svelte library, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+introducing Uncharted: a new natively reactive, composable and typesafe chart library + tooling for #svelte5. 
 
-Read more about creating a library [in the docs](https://svelte.dev/docs/kit/packaging).
+```svelte
+<script lang="ts">
+	import { Chart } from '$lib/index.js';
+	interface DataPoint {
+		category: string;
+		value: number;
+	}
 
-## Creating a project
+	function generateRandomData(
+		categories: number = 26,
+		minValue: number = 0,
+		maxValue: number = 500
+	): DataPoint[] {
+		return Array.from({ length: categories }, (_, i) => ({
+			category: String.fromCharCode(65 + i),
+			value: Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue
+		}));
+	}
 
-If you're seeing this, you've probably already done this step. Congrats!
+	let data = $state(generateRandomData());
+	setInterval(() => {
+		data = generateRandomData();
+	}, 1000);
+</script>
 
-```bash
-# create a new project in the current directory
-npx sv create
+<div class="mb-10">
+	<h2 class="font-bold">Uncharted</h2>
+	<p class="text-sm">Composable, reactive, and typesafe charts, native to svelte 5</p>
+</div>
 
-# create a new project in my-app
-npx sv create my-app
+<Chart.Root {data} margin={{ left: 50, top: 30, right: 30 }}>
+	<Chart.AxesContainer xKey="category" yKey="value">
+		<Chart.Axes.Y />
+		<Chart.Axes.X />
+		<Chart.Series.Bar />
+	</Chart.AxesContainer>
+</Chart.Root>
 ```
 
-## Developing
+bringing inspiration from libraries like Bits UI where components are built in "layers", Uncharted allows to bring in whatever layers you want for your chart, as well as allowing full customization of every layer. 
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+want a grid? you have it. want tooltips? you have'em. don't want X axis? just don't include them.
 
-```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
-
-Everything inside `src/lib` is part of your library, everything inside `src/routes` can be used as a showcase or preview app.
-
-## Building
-
-To build your library:
-
-```bash
-npm run package
-```
-
-To create a production version of your showcase app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
-
-## Publishing
-
-Go into the `package.json` and give your package the desired name through the `"name"` option. Also consider adding a `"license"` field and point it to a `LICENSE` file which you can create from a template (one popular option is the [MIT license](https://opensource.org/license/mit/)).
-
-To publish your library to [npm](https://www.npmjs.com):
-
-```bash
-npm publish
-```
+want to make a custom and reusable tooltip? make a "MyTooltip.svelte" component and use that instead. sky's the limit. peek into the uncharted!
