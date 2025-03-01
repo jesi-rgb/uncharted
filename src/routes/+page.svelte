@@ -1,25 +1,14 @@
 <script lang="ts">
+	import { generateBarData } from '$lib/data-generators/bar-gen.js';
+	import { generateLineData } from '$lib/data-generators/shape-gen.js';
 	import { Chart } from '$lib/index.js';
-	interface DataPoint {
-		category: string;
-		value: number;
-	}
 
-	function generateRandomData(
-		categories: number = 26,
-		minValue: number = 0,
-		maxValue: number = 500
-	): DataPoint[] {
-		return Array.from({ length: categories }, (_, i) => ({
-			category: String.fromCharCode(65 + i),
-			value: Math.floor(Math.random() * (maxValue - minValue + 1)) + minValue
-		}));
-	}
+	const barData = generateBarData({ categories: 100, distribution: 'pareto' });
 
-	let data = $state(generateRandomData());
-	setInterval(() => {
-		data = generateRandomData();
-	}, 1000);
+	console.log(barData);
+
+	const lineData = generateLineData({ points: 1000, minY: -100, maxY: 100 });
+	console.log(barData);
 </script>
 
 <div class="mb-10">
@@ -27,10 +16,19 @@
 	<p class="text-sm">Composable, reactive, and typesafe charts, native to svelte 5</p>
 </div>
 
-<Chart.Root {data} margin={{ left: 50, top: 30, right: 30 }}>
-	<Chart.AxesContainer xKey="category" yKey="value">
+<Chart.Root data={barData} margin={{ left: 50, top: 30, right: 30 }}>
+	<Chart.AxesContainer x="category" y="value">
+		<Chart.Series.Bar />
 		<Chart.Axes.Y />
 		<Chart.Axes.X />
-		<Chart.Series.Bar />
+		<Chart.Layers.Grid />
+	</Chart.AxesContainer>
+</Chart.Root>
+
+<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30 }}>
+	<Chart.AxesContainer x="x" y="y">
+		<Chart.Series.Area />
+		<Chart.Axes.Y />
+		<Chart.Axes.X />
 	</Chart.AxesContainer>
 </Chart.Root>

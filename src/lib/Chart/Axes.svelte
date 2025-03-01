@@ -4,14 +4,10 @@
 	import { extent, scaleBand, scaleLinear } from 'd3';
 
 	// Get context values
-	let chartState: ChartContext = chartContext.get();
-	let { children, xKey, yKey } = $props();
+	let { children, x: xKey, y: yKey } = $props();
 
 	// Create derived values that will automatically update
-	let data = $derived(chartState.data);
-	let margin = $derived(chartState.margin);
-	let width = $derived(chartState.width);
-	let height = $derived(chartState.height);
+	let { data, margin, width, height, id } = $derived(chartContext.get());
 
 	// Create reactive scales
 	let xScale = $derived(
@@ -44,6 +40,6 @@
 	});
 </script>
 
-<g class="axes font-sans">
+<g {id} class="axes font-sans">
 	{@render children()}
 </g>

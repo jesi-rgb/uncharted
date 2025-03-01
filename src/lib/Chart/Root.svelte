@@ -22,6 +22,7 @@
 		}) => any;
 	}
 
+	const id = crypto.randomUUID();
 	let defaultMargin = { top: 0, right: 0, bottom: 40, left: 20 };
 	let {
 		data,
@@ -50,6 +51,9 @@
 		},
 		get margin() {
 			return computedMargin;
+		},
+		get id() {
+			return id;
 		}
 	});
 </script>

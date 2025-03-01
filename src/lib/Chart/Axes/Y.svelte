@@ -7,21 +7,19 @@
 		yScale: ScaleLinear<number, number>;
 	}
 
-	let chartState = chartContext.get();
-	let axesState = yAxesContext.get();
+	let { margin, id } = $derived(chartContext.get());
+	let { yScale } = $derived(yAxesContext.get());
 	let { ...rest } = $props();
-
-	let margin = $derived(chartState.margin);
-	let yScale = $derived(axesState.yScale);
 
 	let axis = $derived(axisLeft(yScale).tickSize(10).tickFormat(format('~s')));
 
 	$effect(() => {
-		const yAxisElement = select('#yAxis');
+		const yAxisElement = select('#yAxis-' + id);
 		if (yAxisElement) {
 			yAxisElement.call(axis);
 		}
 	});
 </script>
 
-<g class="font-sans tabular-nums" id="yAxis" transform="translate({margin.left},0)" {...rest}> </g>
+<g class="font-sans tabular-nums" id="yAxis-{id}" transform="translate({margin.left},0)" {...rest}>
+</g>
