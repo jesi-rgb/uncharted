@@ -20,7 +20,7 @@
 		stroke = '#ccc',
 		strokeWidth = 1,
 		strokeDashArray = '3 5',
-		opacity = 0.8
+		opacity = 0.2
 	}: Props = $props();
 
 	let xTicks = $derived(xScale.domain());

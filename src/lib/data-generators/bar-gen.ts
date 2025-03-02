@@ -150,7 +150,7 @@ export function generateBarData(options: BarDataOptions = {}): BarDataPoint[] {
 		if (categoryNames && i < categoryNames.length) {
 			category = categoryNames[i];
 		} else {
-			category = String.fromCharCode(i + 65)
+			category = String.fromCharCode(i + 30)
 		}
 
 		// Create data point with custom keys

@@ -8,7 +8,7 @@
 
 	const { height, margin, data } = $derived(chartContext.get());
 
-	let { color = '#69b3a2', opacity = 0.1 }: Props = $props();
+	let { color = '#69b3a2', opacity = 0.3 }: Props = $props();
 
 	const { xKey, xScale } = $derived(xAxesContext.get());
 	const { yKey, yScale } = $derived(yAxesContext.get());
@@ -52,6 +52,12 @@
 	);
 </script>
 
+<defs>
+	<linearGradient id="gradient" x1="0" y1="0" x2="0" y2="1">
+		<stop offset="5%" stop-color={fillColor} />
+		<stop offset="95%" stop-color={fillColor} stop-opacity={0} />
+	</linearGradient>
+</defs>
 <g id="area">
-	<path d={areaChart(data)} fill={fillColor} stroke-width="1.2" stroke={color}></path>
+	<path d={areaChart(data)} fill={'url(#gradient)'} stroke-width="1.2" stroke={color}></path>
 </g>
