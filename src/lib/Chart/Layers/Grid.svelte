@@ -5,47 +5,65 @@
 	// Get scales from context
 	const { yKey, yScale } = $derived(yAxesContext.get());
 	const { xKey, xScale } = $derived(xAxesContext.get());
-	const { margin, width } = $derived(chartContext.get());
+	const { margin, width, height } = $derived(chartContext.get());
 
 	interface Props {
-		axis?: 'x' | 'y' | 'both';
+		axis?: 'horizontal' | 'vertical' | 'both';
 		stroke?: string;
 		strokeWidth?: number;
 		strokeDashArray?: string;
 		opacity?: number;
 	}
+
 	const {
-		axis,
-		stroke = 'gray',
+		axis = 'both',
+		stroke = '#ccc',
 		strokeWidth = 1,
-		strokeDashArray = '0 3 0',
-		opacity = 0.5
+		strokeDashArray = '3 5',
+		opacity = 0.8
 	}: Props = $props();
-	// Generate tick values based on scales
-	let xTicks = $derived(xScale.ticks ? xScale.ticks() : []);
+
+	let xTicks = $derived(xScale.domain());
 	let yTicks = $derived(yScale.ticks ? yScale.ticks() : []);
 
-	$inspect(yTicks);
-
-	// Determine if we should show x and/or y grid lines
-	let showXGrid = $derived(axis === 'x' || axis === 'both');
-	let showYGrid = $derived(axis === 'y' || axis === 'both');
+	let showXGrid = $derived(axis === 'horizontal' || axis === 'both');
+	let showYGrid = $derived(axis === 'vertical' || axis === 'both');
 </script>
 
-<g class="grid-lines" aria-hidden="true">
-	{#each yTicks as yT}
-		<line
-			x1={margin.left}
-			y1={yScale(yT)}
-			x2={width - margin.right}
-			y2={yScale(yT)}
-			class="grid-line"
-			{stroke}
-			stroke-width={strokeWidth}
-			stroke-dasharray={strokeDashArray}
-			{opacity}
-		/>
-	{/each}
+<g class="horizontal-lines" aria-hidden="true">
+	{#if showXGrid}
+		{#each yTicks as yT}
+			<line
+				x1={margin.left}
+				x2={width - margin.right}
+				y1={yScale(yT)}
+				y2={yScale(yT)}
+				class="grid-line"
+				{stroke}
+				stroke-width={strokeWidth}
+				stroke-dasharray={strokeDashArray}
+				{opacity}
+			/>
+		{/each}
+	{/if}
+</g>
+
+<g class="vertical-lines" aria-hidden="true">
+	{#if showYGrid}
+		{#each xTicks as xT}
+			<line
+				x1={xScale(xT) + xScale.bandwidth() / 2}
+				x2={xScale(xT) + xScale.bandwidth() / 2}
+				y1={margin.top}
+				y2={height - margin.bottom}
+				class="grid-line"
+				{stroke}
+				stroke-width={strokeWidth}
+				stroke-dasharray={strokeDashArray}
+				{opacity}
+			/>
+		{/each}
+	{/if}
 </g>
 
 <style>

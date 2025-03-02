@@ -1,34 +1,28 @@
 <script lang="ts">
 	import { generateBarData } from '$lib/data-generators/bar-gen.js';
-	import { generateLineData } from '$lib/data-generators/shape-gen.js';
+	import { generateLineData, generateMultiLineData } from '$lib/data-generators/shape-gen.js';
 	import { Chart } from '$lib/index.js';
+	import { bin, randomNormal, randomUniform } from 'd3';
 
-	const barData = generateBarData({ categories: 100, distribution: 'pareto' });
+	const ageHistogramData = $derived(generateBarData({ distribution: 'normal' }));
 
-	console.log(barData);
-
-	const lineData = generateLineData({ points: 1000, minY: -100, maxY: 100 });
-	console.log(barData);
+	console.log(ageHistogramData);
 </script>
 
 <div class="mb-10">
-	<h2 class="font-bold">Uncharted</h2>
-	<p class="text-sm">Composable, reactive, and typesafe charts, native to svelte 5</p>
+	<h2 class="font-bold">Age Histogram</h2>
 </div>
 
-<Chart.Root data={barData} margin={{ left: 50, top: 30, right: 30 }}>
+<Chart.Root data={ageHistogramData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
 	<Chart.AxesContainer x="category" y="value">
-		<Chart.Series.Bar />
-		<Chart.Axes.Y />
-		<Chart.Axes.X />
+		<Chart.Series.Bar color="steelblue" />
 		<Chart.Layers.Grid />
-	</Chart.AxesContainer>
-</Chart.Root>
-
-<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30 }}>
-	<Chart.AxesContainer x="x" y="y">
-		<Chart.Series.Area />
 		<Chart.Axes.Y />
 		<Chart.Axes.X />
+	</Chart.AxesContainer>
+
+	<Chart.AxesContainer x="category" y="averageAge">
+		<Chart.Series.Bar patternAngle={-50} color="hotpink" />
+		<Chart.Axes.Y right />
 	</Chart.AxesContainer>
 </Chart.Root>

@@ -1,27 +1,21 @@
-<script lang="ts">
+<script lang="ts" generics="T">
 	import { chartContext, xAxesContext, yAxesContext } from '$lib/context.js';
 	import type { ChartContext } from '$lib/types.js';
+	import { createScale } from '$lib/utils/infer-type.js';
 	import { extent, scaleBand, scaleLinear } from 'd3';
+	import { type Snippet } from 'svelte';
 
 	// Get context values
-	let { children, x: xKey, y: yKey } = $props();
+	let { children, x: xKey, y: yKey }: { children: Snippet; x: keyof T; y: keyof T } = $props();
 
 	// Create derived values that will automatically update
-	let { data, margin, width, height, id } = $derived(chartContext.get());
+	let { data, margin, width, height, id }: Props = $derived(chartContext.get());
 
 	// Create reactive scales
-	let xScale = $derived(
-		scaleBand()
-			.domain(data.map((d) => d[xKey]))
-			.range([margin.left, width - margin.right])
-			.padding(0.4)
-	);
+	let { scale: xScale } = $derived(createScale(data, xKey, [margin.left, width - margin.right]));
 
-	let yScale = $derived(
-		scaleLinear()
-			.domain(extent(data.map((d) => d[yKey])) || [0, 1])
-			.range([height - margin.bottom, margin.top])
-			.nice(2)
+	let { scale: yScale, type } = $derived(
+		createScale(data, yKey, [height - margin.bottom, margin.top])
 	);
 
 	// Set context during initialization with getters that access reactive values

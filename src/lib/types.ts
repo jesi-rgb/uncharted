@@ -9,6 +9,5 @@ export type ChartContext<T> = {
 		left: number,
 		right: number,
 	};
-	xKey: 'string';
-	yKey: 'string';
+	id: string;
 }

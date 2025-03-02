@@ -12,7 +12,7 @@
 		rest?: SVGRectElement;
 	}
 
-	const { height, margin, data }: ChartContext = $derived(chartContext.get());
+	const { height, margin, data } = $derived(chartContext.get());
 
 	const { xKey, xScale } = $derived(xAxesContext.get());
 	const { yKey, yScale } = $derived(yAxesContext.get());
@@ -21,9 +21,9 @@
 		color = '#69b3a2',
 		patternId = 'diagonal-pattern',
 		patternAngle = 50,
-		patternSpacing = 3,
+		patternSpacing = 5,
 		patternWidth = 1,
-		patternOpacity = 0.3,
+		patternOpacity = 0.5,
 		...rest
 	}: Props = $props();
 
@@ -63,7 +63,7 @@
 			width={xScale.bandwidth()}
 			fill={`url(#${uniquePatternId})`}
 			stroke={color}
-			stroke-width="0.5"
+			stroke-width="0.9"
 			{...rest}
 		/>
 	{/each}

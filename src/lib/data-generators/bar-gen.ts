@@ -1,3 +1,5 @@
+import { bin, randomNormal } from "d3";
+
 /**
  * Represents a data point for a bar chart
  */
@@ -42,9 +44,9 @@ export function generateBarData(options: BarDataOptions = {}): BarDataPoint[] {
 		categories = 10,
 		minValue = 0,
 		maxValue = 100,
-		distribution = 'uniform',
+		distribution,
 		categoryNames,
-		groups = 3,
+		groups,
 		categoryKey = 'category',
 		valueKey = 'value',
 		sort = 'none'
@@ -80,6 +82,42 @@ export function generateBarData(options: BarDataOptions = {}): BarDataPoint[] {
 		values.sort((a, b) => a - b);
 	}
 
+	if (distribution == 'normal') {
+
+		// Generate random age data with a normal distribution
+		// Mean age of 40, standard deviation of 15
+		const ageGenerator = randomNormal(60, 15);
+
+		// Generate 10,000 random age data points
+		const rawAgeData = Array.from({ length: 1900 }, () => {
+			// Ensure ages are between 0 and 100
+			return Math.min(100, Math.max(0, Math.round(ageGenerator())));
+		});
+
+		// Create histogram bins for the age data
+		// Define age brackets with 10-year intervals
+		const ageBinGenerator = bin()
+			.domain([0, 100])
+			.thresholds([0, 10, 20, 30, 40, 50, 60, 70, 80, 90]);
+
+		// Generate the histogram data
+		const ageBins = ageBinGenerator(rawAgeData);
+
+		// Format the data for the chart
+		return ageBins.map((bin) => {
+			const minAge = Math.round(bin.x0);
+			const maxAge = Math.round(bin.x1);
+			return {
+				value: bin.length,
+				count: bin.length,
+				percentage: Math.round((bin.length / rawAgeData.length) * 100),
+				category: `${minAge}-${maxAge}`,
+				averageAge:
+					bin.length > 0 ? Math.round(bin.reduce((sum, age) => sum + age, 0) / bin.length) : 0
+			};
+		});
+	}
+
 	// Generate values based on the selected distribution
 	for (let i = 0; i < categories; i++) {
 		let value: number;
@@ -89,16 +127,6 @@ export function generateBarData(options: BarDataOptions = {}): BarDataPoint[] {
 			value = values[i];
 		} else {
 			switch (distribution) {
-				case 'normal':
-					// Bell curve distribution (more values in the middle range)
-					// Using Box-Muller transform for normal distribution
-					const u1 = Math.random();
-					const u2 = Math.random();
-					const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-					// Scale to our range (z is normally between -3 and 3)
-					const normalized = (z + 3) / 6; // Convert to 0-1 range
-					value = Math.round(minValue + normalized * range);
-					break;
 
 				case 'grouped':
 					// Grouped pattern - values cluster around certain points
@@ -115,8 +143,6 @@ export function generateBarData(options: BarDataOptions = {}): BarDataPoint[] {
 					break;
 			}
 
-			// Ensure value stays within bounds
-			value = Math.max(minValue, Math.min(maxValue, value));
 		}
 
 		// Determine category name
@@ -124,7 +150,7 @@ export function generateBarData(options: BarDataOptions = {}): BarDataPoint[] {
 		if (categoryNames && i < categoryNames.length) {
 			category = categoryNames[i];
 		} else {
-			category = `Category ${i + 1}`;
+			category = String.fromCharCode(i + 65)
 		}
 
 		// Create data point with custom keys
@@ -134,15 +160,6 @@ export function generateBarData(options: BarDataOptions = {}): BarDataPoint[] {
 		};
 
 		result.push(dataPoint);
-	}
-
-	// Sort the data if requested (but not for Pareto which is already sorted)
-	if (sort !== 'none' && distribution !== 'pareto') {
-		result.sort((a, b) => {
-			const aValue = a[valueKey] as number;
-			const bValue = b[valueKey] as number;
-			return sort === 'ascending' ? aValue - bValue : bValue - aValue;
-		});
 	}
 
 	return result;
@@ -221,11 +238,24 @@ export function generateMultiBarData(
 
 				switch (distribution) {
 					case 'normal':
-						const u1 = Math.random();
-						const u2 = Math.random();
-						const z = Math.sqrt(-2 * Math.log(u1)) * Math.cos(2 * Math.PI * u2);
-						const normalized = (z + 3) / 6;
-						value = Math.round(seriesMin + normalized * seriesRange);
+						// Normal distribution (bell curve)
+						// Calculate what percentile this index represents in the distribution
+						const percentile = (i + 0.5) / categories;
+
+						// Convert percentile to z-score (standard normal value)
+						// This approximates the inverse normal CDF
+						const p = Math.max(0.001, Math.min(0.999, percentile));
+						const a = 8 * (Math.PI - 3) / (3 * Math.PI * (4 - Math.PI));
+						const y = Math.log(1 - p * p);
+						const z = p > 0.5 ?
+							Math.sqrt(-y + Math.sqrt(y * y + a * y)) :
+							-Math.sqrt(-y + Math.sqrt(y * y + a * y));
+
+						// Scale z-score to our range
+						const mean = seriesMin + seriesRange / 2;
+						const stdDev = seriesRange / 6; // 6 standard deviations span the range
+
+						value = Math.round(mean + z * stdDev);
 						break;
 
 					case 'grouped':
