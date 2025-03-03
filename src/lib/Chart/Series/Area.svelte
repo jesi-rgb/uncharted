@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { chartContext, xAxesContext, yAxesContext } from '$lib/context.js';
-	import { area } from 'd3';
+	import { area, curveCatmullRom } from 'd3';
 
 	interface Props {
 		color?: string;
@@ -49,6 +49,7 @@
 			.x((d) => xScale(d[xKey]))
 			.y0(height - margin.bottom)
 			.y1((d) => yScale(d[yKey]))
+			.curve(curveCatmullRom)
 	);
 </script>
 

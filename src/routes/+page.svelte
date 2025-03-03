@@ -4,17 +4,18 @@
 	import { Chart } from '$lib/index.js';
 	import { bin, randomNormal, randomUniform } from 'd3';
 
-	const ageHistogramData = $derived(generateBarData({ distribution: 'normal' }));
+	const ageHistogramData = generateBarData({ distribution: 'normal' });
 	const barData = $derived(generateBarData({ distribution: 'pareto', categories: 100 }));
 	const lineData = generateLineData();
 	const lineData2 = generateLineData();
-	console.log(lineData);
+	console.log(ageHistogramData);
 </script>
 
 <div class="grid grid-cols-2">
 	<div>
-		<div class="mb-10">
-			<h2 class="font-bold">Age Histogram</h2>
+		<div class="prose mb-10">
+			<h2 class="font-title text-xl">Age Histogram</h2>
+			<p>Grid, bars, histogram</p>
 		</div>
 
 		<Chart.Root data={ageHistogramData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
@@ -62,9 +63,9 @@
 			<h2 class="font-bold">Extremely bad data, fancier?</h2>
 		</div>
 
-		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
+		<Chart.Root data={lineData2} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
 			<Chart.AxesContainer x="x" y="y">
-				<Chart.Series.Area color="#FF0000" />
+				<Chart.Series.Area />
 				<Chart.Layers.Grid axis="horizontal" />
 				<Chart.Axes.Y />
 				<Chart.Axes.X />
