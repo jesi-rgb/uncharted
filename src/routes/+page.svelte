@@ -13,8 +13,8 @@
 
 <div class="grid grid-cols-2">
 	<div>
-		<div class="prose mb-10">
-			<h2 class="font-title text-xl">Age Histogram</h2>
+		<div class="mb-10">
+			<h2 class="font-title">Age Histogram</h2>
 			<p>Grid, bars, histogram</p>
 		</div>
 
@@ -30,7 +30,7 @@
 
 	<div>
 		<div class="mb-10">
-			<h2 class="font-bold">Pareto Distribution</h2>
+			<h2 class="font-title">Pareto Distribution</h2>
 		</div>
 
 		<Chart.Root data={barData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
@@ -45,7 +45,7 @@
 
 	<div>
 		<div class="mb-10">
-			<h2 class="font-bold">Extremely bad data</h2>
+			<h2 class="font-title">Extremely bad data</h2>
 		</div>
 
 		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
@@ -60,7 +60,7 @@
 
 	<div>
 		<div class="mb-10">
-			<h2 class="font-bold">Extremely bad data, fancier?</h2>
+			<h2 class="font-title">Extremely bad data, fancier?</h2>
 		</div>
 
 		<Chart.Root data={lineData2} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
