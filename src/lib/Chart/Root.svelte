@@ -5,8 +5,6 @@
 		data: T[];
 		width?: number;
 		height?: number;
-		xKey?: keyof T;
-		yKey?: keyof T;
 		margin?: {
 			top?: number;
 			right?: number;
@@ -29,8 +27,6 @@
 		width = 700,
 		height = 300,
 		margin = defaultMargin,
-		xKey,
-		yKey,
 		children,
 		...rest
 	}: Props<any> = $props();
@@ -60,6 +56,6 @@
 
 <div bind:clientHeight={height} bind:clientWidth={width}>
 	<svg {width} {height} {...rest}>
-		{@render children({ data, width, height, xKey, yKey })}
+		{@render children({ data, width, height })}
 	</svg>
 </div>

@@ -1,15 +1,14 @@
-<script lang="ts" generics="T">
+<script lang="ts" generics="T extends DataPoint">
 	import { chartContext, xAxesContext, yAxesContext } from '$lib/context.js';
-	import type { ChartContext } from '$lib/types.js';
+	import { type ChartContext, type DataPoint } from '$lib/types.js';
 	import { createScale } from '$lib/utils/infer-type.js';
-	import { extent, scaleBand, scaleLinear } from 'd3';
 	import { type Snippet } from 'svelte';
 
 	// Get context values
 	let { children, x: xKey, y: yKey }: { children: Snippet; x: keyof T; y: keyof T } = $props();
 
 	// Create derived values that will automatically update
-	let { data, margin, width, height, id }: Props = $derived(chartContext.get());
+	let { data, margin, width, height, id }: ChartContext<T> = $derived(chartContext.get());
 
 	// Create reactive scales
 	let { scale: xScale } = $derived(createScale(data, xKey, [margin.left, width - margin.right]));

@@ -1,8 +1,7 @@
 <script lang="ts">
 	import { generateBarData } from '$lib/data-generators/bar-gen.js';
-	import { generateLineData, generateMultiLineData } from '$lib/data-generators/shape-gen.js';
+	import { generateLineData } from '$lib/data-generators/shape-gen.js';
 	import { Chart } from '$lib/index.js';
-	import { bin, randomNormal, randomUniform } from 'd3';
 
 	const ageHistogramData = generateBarData({ distribution: 'normal' });
 	const barData = $derived(generateBarData({ distribution: 'pareto', categories: 100 }));

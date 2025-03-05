@@ -1,3 +1,4 @@
+export type DataPoint = Record<string, any>;
 
 export type ChartContext<T> = {
 	data: T[];
@@ -10,4 +11,19 @@ export type ChartContext<T> = {
 		right: number,
 	};
 	id: string;
+}
+
+export type AxisProps = {
+	label?: string;
+	orientation?: 'horizontal' | 'vertical';
+	maxTicks?: number;
+	labelOffset?: number;
+	tickOffset?: number;
+	tickSize?: number;
+	tickPadding?: number;
+	tickFormat?: (value: any) => string;
+}
+
+export type SeriesProps = {
+	color: string;
 }
