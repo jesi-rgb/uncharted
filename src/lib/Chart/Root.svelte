@@ -1,24 +1,6 @@
-<script lang="ts" generics="T">
-	import { chartContext } from '$lib/context.js';
-
-	interface Props<T extends { [key: string]: any }> {
-		data: T[];
-		width?: number;
-		height?: number;
-		margin?: {
-			top?: number;
-			right?: number;
-			bottom?: number;
-			left?: number;
-		};
-		children: (args: {
-			data: T[];
-			width: number;
-			height: number;
-			xKey?: keyof T;
-			yKey?: keyof T;
-		}) => any;
-	}
+<script lang="ts" generics="T extends Record<string, any>">
+	import { createChartContext } from '$lib/context.js';
+	import type { RootProps } from '$lib/types.js';
 
 	const id = crypto.randomUUID();
 	let defaultMargin = { top: 0, right: 0, bottom: 40, left: 20 };
@@ -29,10 +11,11 @@
 		margin = defaultMargin,
 		children,
 		...rest
-	}: Props<any> = $props();
+	}: RootProps<T> = $props();
 
-	// combine whatever the user specifies with the default in margin
 	let computedMargin = $derived({ ...defaultMargin, ...margin });
+
+	const chartContext = createChartContext<T>();
 
 	// Set context during initialization
 	chartContext.set({
@@ -56,6 +39,6 @@
 
 <div bind:clientHeight={height} bind:clientWidth={width}>
 	<svg {width} {height} {...rest}>
-		{@render children({ data, width, height })}
+		{@render children()}
 	</svg>
 </div>

@@ -7,7 +7,6 @@
 	const barData = $derived(generateBarData({ distribution: 'pareto', categories: 100 }));
 	const lineData = generateLineData();
 	const lineData2 = generateLineData();
-	console.log(ageHistogramData);
 </script>
 
 <div class="grid grid-cols-2">
