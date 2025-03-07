@@ -3,6 +3,17 @@
 	let { children } = $props();
 </script>
 
-<main class="mx-auto my-20 w-[95%] max-w-6xl">
+<main>
 	{@render children()}
 </main>
+
+<style>
+	main {
+		/* this will only affect <p> elements in this component */
+		margin-left: auto;
+		margin-right: auto;
+		margin-top: 5rem;
+		margin-bottom: 5rem;
+		max-width: 800px;
+	}
+</style>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { generateBarData } from '$lib/data-generators/bar-gen.js';
+	import { generateBarData, generateTimeSeriesData } from '$lib/data-generators/bar-gen.js';
 	import { generateLineData } from '$lib/data-generators/shape-gen.js';
 	import { Chart } from '$lib/index.js';
 
@@ -7,12 +7,18 @@
 	const barData = $derived(generateBarData({ distribution: 'pareto', categories: 100 }));
 	const lineData = generateLineData();
 	const lineData2 = generateLineData();
+
+	const timeData = generateTimeSeriesData({
+		count: 50,
+		uniqueItems: 3,
+		distribution: 'seasonal'
+	});
 </script>
 
-<div class="grid grid-cols-2">
+<div>
 	<div>
-		<div class="mb-10">
-			<h2 class="font-title">Age Histogram</h2>
+		<div>
+			<h2>Age Histogram</h2>
 			<p>Grid, bars, histogram</p>
 		</div>
 
@@ -28,7 +34,7 @@
 
 	<div>
 		<div class="mb-10">
-			<h2 class="font-title">Pareto Distribution</h2>
+			<h2>Pareto Distribution</h2>
 		</div>
 
 		<Chart.Root data={barData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
@@ -43,7 +49,7 @@
 
 	<div>
 		<div class="mb-10">
-			<h2 class="font-title">Extremely bad data</h2>
+			<h2>Extremely bad data</h2>
 		</div>
 
 		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
@@ -58,7 +64,7 @@
 
 	<div>
 		<div class="mb-10">
-			<h2 class="font-title">Extremely bad data, fancier?</h2>
+			<h2>Extremely bad data, fancier?</h2>
 		</div>
 
 		<Chart.Root data={lineData2} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
@@ -71,3 +77,10 @@
 		</Chart.Root>
 	</div>
 </div>
+
+<style>
+	h2 {
+		font-family: var(--font-title);
+		font-size: 1rem;
+	}
+</style>

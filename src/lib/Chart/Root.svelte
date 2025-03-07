@@ -1,5 +1,5 @@
 <script lang="ts" generics="T extends Record<string, any>">
-	import { createChartContext } from '$lib/context.js';
+	import { chartContext } from '$lib/context.js';
 	import type { RootProps } from '$lib/types.js';
 
 	const id = crypto.randomUUID();
@@ -14,8 +14,6 @@
 	}: RootProps<T> = $props();
 
 	let computedMargin = $derived({ ...defaultMargin, ...margin });
-
-	const chartContext = createChartContext<T>();
 
 	// Set context during initialization
 	chartContext.set({
@@ -37,7 +35,7 @@
 	});
 </script>
 
-<div bind:clientHeight={height} bind:clientWidth={width}>
+<div bind:clientWidth={width}>
 	<svg {width} {height} {...rest}>
 		{@render children()}
 	</svg>

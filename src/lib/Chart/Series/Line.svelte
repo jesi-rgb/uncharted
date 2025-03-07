@@ -4,11 +4,12 @@
 
 	interface Props {
 		color?: string;
+		opacity?: number;
 	}
 
 	const { data } = $derived(chartContext.get());
 
-	let { color = '#69b3a2', ...rest }: Props = $props();
+	let { color = '#69b3a2', opacity = 1, ...rest }: Props = $props();
 
 	const { xKey, xScale } = $derived(xAxesContext.get());
 	const { yKey, yScale } = $derived(yAxesContext.get());
@@ -23,12 +24,5 @@
 </script>
 
 <g id="line">
-	<path
-		{...rest}
-		d={lineChart(data)}
-		fill="none"
-		stroke-width="2"
-		stroke-linejoin="round"
-		stroke={color}
-	></path>
+	<path {...rest} d={lineChart(data)} fill="none" stroke={color}></path>
 </g>

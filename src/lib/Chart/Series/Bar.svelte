@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { chartContext, xAxesContext, yAxesContext } from '$lib/context.js';
-	import type { ChartContext } from '$lib/types.js';
 
 	interface Props {
 		color?: string;
@@ -14,7 +13,9 @@
 
 	const { height, margin, data } = $derived(chartContext.get());
 
-	const { xKey, xScale } = $derived(xAxesContext.get());
+	$inspect(data);
+
+	const { xKey, xType, xScale } = $derived(xAxesContext.get());
 	const { yKey, yScale } = $derived(yAxesContext.get());
 
 	let {
@@ -27,7 +28,15 @@
 		...rest
 	}: Props = $props();
 
-	let categories = $derived(data.map((d) => d[xKey]));
+	let bins = $state([]);
+	$effect(() => {
+		if (xType === 'categorical') {
+			bins = data.map((d) => d[xKey]);
+		} else if (xType === 'date') {
+			console.log(xScale.ticks());
+			bins = xScale.ticks();
+		}
+	});
 
 	// Generate a unique ID for this instance's pattern
 	const uniquePatternId = `${patternId}-${Math.random().toString(36).substring(2, 9)}`;
@@ -54,17 +63,34 @@
 	</pattern>
 </defs>
 
-<g class="bar-series">
-	{#each categories as category, i}
-		<rect
-			x={xScale(category)}
-			y={yScale(data[i][yKey])}
-			height={height - margin.bottom - yScale(data[i][yKey])}
-			width={xScale.bandwidth()}
-			fill={`url(#${uniquePatternId})`}
-			stroke={color}
-			stroke-width="0.9"
-			{...rest}
-		/>
-	{/each}
-</g>
+{#if xType === 'categorical'}
+	<g class="bar-series">
+		{#each bins as category, i}
+			<rect
+				x={xScale(category)}
+				y={yScale(data[i][yKey])}
+				height={height - margin.bottom - yScale(data[i][yKey])}
+				width={xScale.bandwidth()}
+				fill={`url(#${uniquePatternId})`}
+				stroke={color}
+				stroke-width="0.9"
+				{...rest}
+			/>
+		{/each}
+	</g>
+{:else if xType === 'date'}
+	<g class="bar-series">
+		{#each bins as category, i}
+			<rect
+				x={xScale(category)}
+				y={yScale(data[i][yKey])}
+				height={height - margin.bottom - yScale(data[i][yKey])}
+				width={30}
+				fill={`url(#${uniquePatternId})`}
+				stroke={color}
+				stroke-width="0.9"
+				{...rest}
+			/>
+		{/each}
+	</g>
+{/if}

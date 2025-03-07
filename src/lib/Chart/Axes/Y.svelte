@@ -1,24 +1,22 @@
 <script lang="ts">
 	import { axisLeft, axisRight, format, select, type ScaleLinear } from 'd3';
 	import { chartContext, yAxesContext } from '$lib/context.js';
-
-	interface Props {
-		label: string;
-		yScale: ScaleLinear<number, number>;
-	}
+	import type { AxisProps } from '$lib/types.js';
 
 	let { margin, id, width } = $derived(chartContext.get());
 	let { yScale } = $derived(yAxesContext.get());
-	let { right = false, ...rest } = $props();
+	let { right = false, ...rest }: AxisProps = $props();
 
 	let axisId = crypto.randomUUID();
 
 	let axis = $derived.by(() => {
+		let axis;
 		if (right) {
-			return axisRight(yScale).tickSize(6).tickFormat(format('~s'));
+			axis = axisRight(yScale);
 		} else {
-			return axisLeft(yScale).tickSize(6).tickFormat(format('~s'));
+			axis = axisLeft(yScale);
 		}
+		return axis;
 	});
 
 	$effect(() => {
@@ -30,19 +28,16 @@
 </script>
 
 {#if right}
-	<g
-		class="font-sans tabular-nums"
-		id="yAxis-{id}-{axisId}"
-		transform="translate({width - margin.right},0)"
-		{...rest}
-	>
-	</g>
+	<g id="yAxis-{id}-{axisId}" transform="translate({width - margin.right},0)" {...rest}> </g>
 {:else}
-	<g
-		class="font-sans tabular-nums"
-		id="yAxis-{id}-{axisId}"
-		transform="translate({margin.left},0)"
-		{...rest}
-	>
-	</g>
+	<g id="yAxis-{id}-{axisId}" transform="translate({margin.left},0)" {...rest}> </g>
 {/if}
+
+<style>
+	g {
+		font-feature-settings: 'tnum';
+	}
+	:global(.domain) {
+		opacity: 0.3;
+	}
+</style>

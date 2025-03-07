@@ -8,18 +8,23 @@
 	let { children, x: xKey, y: yKey }: { children: Snippet; x: keyof T; y: keyof T } = $props();
 
 	// Create derived values that will automatically update
-	let { data, margin, width, height, id }: ChartContext<T> = $derived(chartContext.get());
+	let { data, margin, width, height, id } = $derived(chartContext.get());
 
 	// Create reactive scales
-	let { scale: xScale } = $derived(createScale(data, xKey, [margin.left, width - margin.right]));
+	let { scale: xScale, type: xType } = $derived(
+		createScale(data, xKey, [margin.left, width - margin.right])
+	);
 
-	let { scale: yScale, type } = $derived(
+	let { scale: yScale, type: yType } = $derived(
 		createScale(data, yKey, [height - margin.bottom, margin.top])
 	);
 
 	// Set context during initialization with getters that access reactive values
 	xAxesContext.set({
 		xKey,
+		get xType() {
+			return xType;
+		},
 		get xScale() {
 			return xScale;
 		}
@@ -27,6 +32,9 @@
 
 	yAxesContext.set({
 		yKey,
+		get yType() {
+			return yType;
+		},
 		get yScale() {
 			return yScale;
 		}
