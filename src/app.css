@@ -1,14 +1,14 @@
 :root {
 	--color-base: #212121;
 	--color-highlight: #ff9800;
-	--color-background: #e0e0e0;
+	--color-background: #eeeeee;
 	--font-sans: 'Ronzino';
 	--font-title: 'Mattone';
 }
 
 @media (prefers-color-scheme: dark) {
 	:root {
-		--color-base: #e0e0e0;
+		--color-base: #eeeeee;
 		--color-highlight: #ff9800;
 		--color-background: #212121;
 	}
@@ -17,5 +17,5 @@
 * {
 	color: var(--color-base);
 	background-color: var(--color-background);
-	font-family: var(--font-sans);
+	font-family: 'Ronzino';
 }

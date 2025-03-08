@@ -2,24 +2,20 @@ import {
 	scaleLinear,
 	scaleBand,
 	scaleTime,
-	scaleOrdinal,
 	scaleLog,
 	type ScaleLinear,
 	type ScaleBand,
 	type ScaleTime,
-	type ScaleOrdinal,
 	type ScaleLogarithmic,
 	extent
 } from 'd3';
 
 type ScaleType =
-	| ScaleLinear<number, number, never>
+	| ScaleLinear<number, number, any>
 	| ScaleBand<string>
-	| ScaleTime<number, number, never>
-	| ScaleOrdinal<string, string>
+	| ScaleTime<number, number, any>
 	| ScaleLogarithmic<number, number, never>;
 
-type DataType = 'number' | 'date' | 'text' | 'categorical' | 'logarithmic';
 
 interface InferredType {
 	type: DataType;
@@ -97,11 +93,10 @@ function allDates(values: any[]): boolean {
 function shouldUseLogScale(values: number[]): boolean {
 	if (values.some(v => v <= 0)) return false; // Log scale can't handle zero or negative values
 
-	const max = Math.max(...values);
-	const min = Math.min(...values);
+	const [min, max] = extent(values)
 
 	// If the ratio between max and min is large, a log scale might be appropriate
-	return max / min > 100;
+	return max / min > 1000;
 }
 
 /**
@@ -184,7 +179,7 @@ export function setDomain<T>(
 	switch (type) {
 		case 'number':
 		case 'logarithmic':
-			return (scale as ScaleLinear<number, number>).domain([0, Math.max(...values)]);
+			return (scale as ScaleLinear<number, number>).domain(extent(values));
 
 		case 'date':
 			const dateValues = values.map(v => new Date(v as string | number | Date));
@@ -250,6 +245,7 @@ export function createScale<T>(
 	type: DataType;
 	scale: ScaleType;
 } {
+
 	const inference = inferType(data, key);
 	const scaleWithDomain = setDomain(inference.scale, data, key, inference.type);
 

@@ -1,14 +1,15 @@
-import type { ScaleLinear, ScaleTime, ScaleBand } from "d3";
+import type { ScaleLinear, ScaleTime, ScaleBand, ScaleLogarithmic } from "d3";
 import type { Snippet } from "svelte";
 
 export type DataPoint = Record<string, any>;
 
-export type ScaleType = 'linear' | 'time' | 'band';
+export type ScaleType = 'number' | 'time' | 'text' | 'categorical' | 'logarithmic';
 
 export type Scale<T> =
-	T extends 'linear' ? ScaleLinear<number, number> :
+	T extends 'number' ? ScaleLinear<number, number> :
+	T extends 'logarithmic' ? ScaleLogarithmic<number, number> :
 	T extends 'time' ? ScaleTime<number, number> :
-	T extends 'band' ? ScaleBand<string> :
+	T extends 'categorical' | 'text' ? ScaleBand<string> :
 	never;
 
 export type ChartScales = {

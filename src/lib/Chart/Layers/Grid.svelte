@@ -3,8 +3,8 @@
 	import { getContext } from 'svelte';
 
 	// Get scales from context
-	const { yKey, yScale } = $derived(yAxesContext.get());
-	const { xKey, xScale } = $derived(xAxesContext.get());
+	const { yKey, yType, yScale } = $derived(yAxesContext.get());
+	const { xKey, xType, xScale } = $derived(xAxesContext.get());
 	const { margin, width, height } = $derived(chartContext.get());
 
 	interface Props {
@@ -17,13 +17,19 @@
 
 	const {
 		axis = 'both',
-		stroke = '#ccc',
+		stroke = 'currentColor',
 		strokeWidth = 1,
-		strokeDashArray = '3 5',
-		opacity = 0.4
+		strokeDashArray = '5 10',
+		opacity = 0.3
 	}: Props = $props();
 
-	let xTicks = $derived(xScale.domain());
+	let xTicks = $derived.by(() => {
+		if (xType === 'time') {
+			return xScale.ticks ? xScale.ticks() : [];
+		} else if (xType === 'categorical') {
+			return xScale.domain();
+		}
+	});
 	let yTicks = $derived(yScale.ticks ? yScale.ticks() : []);
 
 	let showXGrid = $derived(axis === 'horizontal' || axis === 'both');
@@ -51,17 +57,31 @@
 <g class="vertical-lines" aria-hidden="true">
 	{#if showYGrid}
 		{#each xTicks as xT}
-			<line
-				x1={xScale(xT) + xScale.bandwidth() / 2}
-				x2={xScale(xT) + xScale.bandwidth() / 2}
-				y1={margin.top}
-				y2={height - margin.bottom}
-				class="grid-line"
-				{stroke}
-				stroke-width={strokeWidth}
-				stroke-dasharray={strokeDashArray}
-				{opacity}
-			/>
+			{#if xType === 'categorical'}
+				<line
+					x1={xScale(xT) + xScale.bandwidth() / 2}
+					x2={xScale(xT) + xScale.bandwidth() / 2}
+					y1={margin.top}
+					y2={height - margin.bottom}
+					class="grid-line"
+					{stroke}
+					stroke-width={strokeWidth}
+					stroke-dasharray={strokeDashArray}
+					{opacity}
+				/>
+			{:else if xType === 'date'}
+				<line
+					x1={xScale(xT)}
+					x2={xScale(xT)}
+					y1={margin.top}
+					y2={height - margin.bottom}
+					class="grid-line"
+					{stroke}
+					stroke-width={strokeWidth}
+					stroke-dasharray={strokeDashArray}
+					{opacity}
+				/>
+			{/if}
 		{/each}
 	{/if}
 </g>

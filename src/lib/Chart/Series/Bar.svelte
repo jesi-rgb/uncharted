@@ -13,8 +13,6 @@
 
 	const { height, margin, data } = $derived(chartContext.get());
 
-	$inspect(data);
-
 	const { xKey, xType, xScale } = $derived(xAxesContext.get());
 	const { yKey, yScale } = $derived(yAxesContext.get());
 

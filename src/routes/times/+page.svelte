@@ -71,20 +71,24 @@
 		count: 3500,
 		startDate: new Date('2006-01-01'),
 		basePrice: 10,
-		volatility: 0.015
+		volatility: 0.025
 	});
 </script>
 
 <div class="chart-container">
 	<h2>Time-based Histogram</h2>
-	<p>Count of items per time period</p>
 
 	<Chart.Root data={aapl} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
 		<Chart.AxesContainer x="Date" y="Close">
 			<Chart.Axes.Y />
 			<Chart.Axes.X />
 
-			<Chart.Series.Line stroke-width={0.5} />
+			<Chart.Layers.Grid />
+			<Chart.Series.Line
+				color="var(--color-highlight)"
+				stroke-width={0.9}
+				stroke-linejoin="round"
+			/>
 		</Chart.AxesContainer>
 	</Chart.Root>
 </div>
@@ -96,7 +100,9 @@
 	}
 
 	h2 {
-		margin-bottom: 0.5rem;
+		margin-bottom: 0.3rem;
+		font-size: 1rem;
+		font-family: var(--font-title);
 	}
 
 	p {
