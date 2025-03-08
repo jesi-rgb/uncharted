@@ -27,7 +27,7 @@
 				<Chart.Series.Bar />
 				<Chart.Layers.Grid />
 				<Chart.Axes.Y />
-				<Chart.Axes.X />
+				<Chart.Axes.X maxTicks={3} />
 			</Chart.AxesContainer>
 		</Chart.Root>
 	</div>
@@ -42,7 +42,7 @@
 				<Chart.Layers.Grid axis="horizontal" />
 				<Chart.Series.Bar />
 				<Chart.Axes.Y />
-				<Chart.Axes.X />
+				<Chart.Axes.X maxTicks={100} />
 			</Chart.AxesContainer>
 		</Chart.Root>
 	</div>
@@ -55,9 +55,9 @@
 		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
 			<Chart.AxesContainer x="x" y="y">
 				<Chart.Series.Line color="red" />
-				<Chart.Layers.Grid axis="horizontal" />
+				<Chart.Layers.Grid />
 				<Chart.Axes.Y />
-				<Chart.Axes.X />
+				<Chart.Axes.X maxTicks={20} />
 			</Chart.AxesContainer>
 		</Chart.Root>
 	</div>

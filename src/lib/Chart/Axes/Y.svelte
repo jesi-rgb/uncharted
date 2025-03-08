@@ -20,10 +20,7 @@
 	});
 
 	$effect(() => {
-		const yAxisElement = select('#yAxis-' + id + '-' + axisId);
-		if (yAxisElement) {
-			yAxisElement.call(axis);
-		}
+		select('#yAxis-' + id + '-' + axisId).call(axis);
 	});
 </script>
 

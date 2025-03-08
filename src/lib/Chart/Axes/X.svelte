@@ -3,7 +3,7 @@
 	import type { AxisProps } from '$lib/types.js';
 	import { axisBottom, select } from 'd3';
 
-	let { maxTicks = 10 }: AxisProps = $props();
+	let { maxTicks = 30 }: AxisProps = $props();
 	let { height, margin, id } = $derived(chartContext.get());
 
 	let { xScale, xType } = $derived(xAxesContext.get());
@@ -28,14 +28,11 @@
 
 			return axisGenerator;
 		}
-		return axisBottom(xScale);
+		return axisBottom(xScale).ticks(maxTicks);
 	});
 
 	$effect(() => {
-		const xAxisElement = select('#xAxis-' + id);
-		if (xAxisElement) {
-			xAxisElement.call(axis);
-		}
+		select('#xAxis-' + id).call(axis);
 	});
 </script>
 
