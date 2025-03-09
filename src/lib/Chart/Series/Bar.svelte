@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { chartContext, xAxesContext, yAxesContext } from '$lib/context.js';
+	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 
 	interface Props {
 		color?: string;
@@ -11,10 +11,10 @@
 		rest?: SVGRectElement;
 	}
 
-	const { height, margin, data } = $derived(chartContext.get());
+	const { height, margin, data } = $derived($chartStore);
 
-	const { xKey, xType, xScale } = $derived(xAxesContext.get());
-	const { yKey, yScale } = $derived(yAxesContext.get());
+	const { xKey, xType, xScale } = $derived($xAxesStore);
+	const { yKey, yScale } = $derived($yAxesStore);
 
 	let {
 		color = '#69b3a2',

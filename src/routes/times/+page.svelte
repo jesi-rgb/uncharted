@@ -71,25 +71,36 @@
 		count: 3500,
 		startDate: new Date('2006-01-01'),
 		basePrice: 10,
-		volatility: 0.025
+		volatility: 0.095
 	});
+
+	const goog = generateStockData({
+		count: 3500,
+		startDate: new Date('2006-01-01'),
+		basePrice: 40,
+		volatility: 0.095
+	});
+
+	const fuuck = generateStockData({
+		count: 3500,
+		startDate: new Date('2006-01-01'),
+		basePrice: 40,
+		volatility: 0.095
+	});
+
+	// mix both objects
+	const combined = { aapl: aapl, goog: goog, fuuck: fuuck };
 </script>
 
 <div class="chart-container">
 	<h2>Time-based Histogram</h2>
 
-	<Chart.Root data={aapl} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-		<Chart.AxesContainer x="Date" y="Close">
-			<Chart.Axes.Y />
-			<Chart.Axes.X />
-
-			<Chart.Layers.Grid />
-			<Chart.Series.Line
-				color="var(--color-highlight)"
-				stroke-width={0.9}
-				stroke-linejoin="round"
-			/>
-		</Chart.AxesContainer>
+	<Chart.Root data={combined} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
+		<Chart.Line series="aapl" x="Date" y="Close" color="blue" />
+		<Chart.Line series="goog" x="Date" y="Close" color="red" />
+		<Chart.Line series="fuuck" x="Date" y="Close" color="yellow" />
+		<Chart.Axes.X />
+		<Chart.Axes.Y />
 	</Chart.Root>
 </div>
 

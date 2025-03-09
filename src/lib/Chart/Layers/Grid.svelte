@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { yAxesContext, xAxesContext, chartContext } from '$lib/context.js';
-	import { getContext } from 'svelte';
+	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 
 	// Get scales from context
-	const { yKey, yType, yScale } = $derived(yAxesContext.get());
-	const { xKey, xType, xScale } = $derived(xAxesContext.get());
-	const { margin, width, height } = $derived(chartContext.get());
+	const { margin, width, height } = $derived($chartStore);
+
+	const { yKey, yType, yScale } = $derived($yAxesStore);
+	const { xKey, xType, xScale } = $derived($xAxesStore);
 
 	interface Props {
 		axis?: 'horizontal' | 'vertical' | 'both';

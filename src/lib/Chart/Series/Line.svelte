@@ -1,28 +1,62 @@
 <script lang="ts">
-	import { chartContext, xAxesContext, yAxesContext } from '$lib/context.js';
+	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
+	import { createScale } from '$lib/utils/infer-type.js';
 	import { line } from 'd3';
 
 	interface Props {
+		x: string;
+		y: string;
+		series?: string;
 		color?: string;
 		opacity?: number;
 	}
 
-	const { data } = $derived(chartContext.get());
+	let { data, margin, width, height } = $derived($chartStore);
+	const { x, y, series, color, opacity, ...rest }: Props = $props();
 
-	let { color = '#69b3a2', opacity = 1, ...rest }: Props = $props();
+	let renderData = $derived.by(() => {
+		if (series) {
+			return data[series];
+		} else {
+			return data;
+		}
+	});
 
-	const { xKey, xScale } = $derived(xAxesContext.get());
-	const { yKey, yScale } = $derived(yAxesContext.get());
+	let { scale: xScale, type: xType } = $derived(
+		createScale(renderData, x, [margin.left, width - margin.right])
+	);
 
-	let categories = $derived(data.map((d) => d[xKey]));
+	let { scale: yScale, type: yType } = $derived(
+		createScale(renderData, y, [height - margin.bottom, margin.top])
+	);
+
+	xAxesStore.set({
+		xKey: x,
+		get xType() {
+			return xType;
+		},
+		get xScale() {
+			return xScale;
+		}
+	});
+
+	yAxesStore.set({
+		yKey: y,
+		get yType() {
+			return yType;
+		},
+		get yScale() {
+			return yScale;
+		}
+	});
 
 	const lineChart = $derived(
 		line()
-			.x((d) => xScale(d[xKey]))
-			.y((d) => yScale(d[yKey]))
+			.x((d) => xScale(d[x]))
+			.y((d) => yScale(d[y]))
 	);
 </script>
 
 <g id="line">
-	<path {...rest} d={lineChart(data)} fill="none" stroke={color}></path>
+	<path {...rest} d={lineChart(renderData)} fill="none" stroke={color}></path>
 </g>

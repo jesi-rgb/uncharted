@@ -3,6 +3,7 @@ import AxesContainer from './Axes.svelte';
 import X from './Axes/X.svelte';
 import Y from './Axes/Y.svelte';
 import Series from './Series.svelte';
+import MultiSeries from './MultiSeries.svelte';
 import Area from './Series/Area.svelte';
 import Bar from './Series/Bar.svelte';
 import Line from './Series/Line.svelte';
@@ -15,9 +16,8 @@ export const Chart = {
 		X,
 		Y
 	},
-	Series: {
-		Area, Bar, Line
-	},
+	Area, Bar, Line,
+	MultiSeries,
 	Layers: {
 		Grid
 	}

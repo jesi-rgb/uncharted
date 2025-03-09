@@ -24,10 +24,10 @@
 
 		<Chart.Root data={ageHistogramData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
 			<Chart.AxesContainer x="category" y="value">
-				<Chart.Series.Bar />
+				<Chart.Bar />
 				<Chart.Layers.Grid />
 				<Chart.Axes.Y />
-				<Chart.Axes.X maxTicks={3} />
+				<Chart.Axes.X maxTicks={4} />
 			</Chart.AxesContainer>
 		</Chart.Root>
 	</div>
@@ -40,7 +40,7 @@
 		<Chart.Root data={barData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
 			<Chart.AxesContainer x="category" y="value">
 				<Chart.Layers.Grid axis="horizontal" />
-				<Chart.Series.Bar />
+				<Chart.Bar />
 				<Chart.Axes.Y />
 				<Chart.Axes.X maxTicks={100} />
 			</Chart.AxesContainer>
@@ -53,12 +53,10 @@
 		</div>
 
 		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-			<Chart.AxesContainer x="x" y="y">
-				<Chart.Series.Line color="red" />
-				<Chart.Layers.Grid />
-				<Chart.Axes.Y />
-				<Chart.Axes.X maxTicks={20} />
-			</Chart.AxesContainer>
+			<Chart.Line x="x" y="y" color="red" />
+			<Chart.Layers.Grid />
+			<Chart.Axes.Y />
+			<Chart.Axes.X maxTicks={20} />
 		</Chart.Root>
 	</div>
 
@@ -68,12 +66,10 @@
 		</div>
 
 		<Chart.Root data={lineData2} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-			<Chart.AxesContainer x="x" y="y">
-				<Chart.Series.Area />
-				<Chart.Layers.Grid axis="horizontal" />
-				<Chart.Axes.Y />
-				<Chart.Axes.X />
-			</Chart.AxesContainer>
+			<Chart.Area x="x" y="y" />
+			<Chart.Layers.Grid />
+			<Chart.Axes.Y />
+			<Chart.Axes.X />
 		</Chart.Root>
 	</div>
 </div>

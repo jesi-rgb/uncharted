@@ -1,5 +1,5 @@
 <script lang="ts" generics="T extends Record<string, any>">
-	import { chartContext } from '$lib/context.js';
+	import { chartStore } from '$lib/stores.js';
 	import type { RootProps } from '$lib/types.js';
 
 	const id = crypto.randomUUID();
@@ -16,7 +16,7 @@
 	let computedMargin = $derived({ ...defaultMargin, ...margin });
 
 	// Set context during initialization
-	chartContext.set({
+	chartStore.set({
 		get data() {
 			return data;
 		},

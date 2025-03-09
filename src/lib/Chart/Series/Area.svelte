@@ -1,17 +1,19 @@
 <script lang="ts">
-	import { chartContext, xAxesContext, yAxesContext } from '$lib/context.js';
+	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 	import { area, curveCatmullRom } from 'd3';
 
 	interface Props {
+		x: string;
+		y: string;
 		color?: string;
 	}
 
-	const { height, margin, data } = $derived(chartContext.get());
+	const { height, margin, data } = $derived($chartStore);
 
 	let { color = '#69b3a2', opacity = 0.3 }: Props = $props();
 
-	const { xKey, xScale } = $derived(xAxesContext.get());
-	const { yKey, yScale } = $derived(yAxesContext.get());
+	const { xKey, xScale } = $derived($xAxesStore);
+	const { yKey, yScale } = $derived($yAxesStore);
 
 	let categories = $derived(data.map((d) => d[xKey]));
 

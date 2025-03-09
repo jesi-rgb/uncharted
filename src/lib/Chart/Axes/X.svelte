@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { chartContext, xAxesContext } from '$lib/context.js';
+	import { chartStore, xAxesStore } from '$lib/stores.js';
 	import type { AxisProps } from '$lib/types.js';
 	import { axisBottom, select } from 'd3';
 
-	let { maxTicks = 30 }: AxisProps = $props();
-	let { height, margin, id } = $derived(chartContext.get());
+	let { maxTicks = 10 }: AxisProps = $props();
+	let { height, margin, id } = $derived($chartStore);
 
-	let { xScale, xType } = $derived(xAxesContext.get());
+	let { xKey, xScale, xType } = $derived($xAxesStore);
 
 	// For categorical scales (scaleBand), we need to manually limit the ticks
 	let axis = $derived.by(() => {

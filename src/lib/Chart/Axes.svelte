@@ -1,6 +1,5 @@
-<script lang="ts" generics="T extends DataPoint">
-	import { chartContext, xAxesContext, yAxesContext } from '$lib/context.js';
-	import { type ChartContext, type DataPoint } from '$lib/types.js';
+<script lang="ts" generics="T">
+	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 	import { createScale } from '$lib/utils/infer-type.js';
 	import { type Snippet } from 'svelte';
 
@@ -8,7 +7,7 @@
 	let { children, x: xKey, y: yKey }: { children: Snippet; x: keyof T; y: keyof T } = $props();
 
 	// Create derived values that will automatically update
-	let { data, margin, width, height, id } = $derived(chartContext.get());
+	let { data, margin, width, height, id } = $derived($chartStore);
 
 	// Create reactive scales
 	let { scale: xScale, type: xType } = $derived(
@@ -20,7 +19,7 @@
 	);
 
 	// Set context during initialization with getters that access reactive values
-	xAxesContext.set({
+	xAxesStore.set({
 		xKey,
 		get xType() {
 			return xType;
@@ -30,7 +29,7 @@
 		}
 	});
 
-	yAxesContext.set({
+	yAxesStore.set({
 		yKey,
 		get yType() {
 			return yType;
