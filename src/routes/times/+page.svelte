@@ -70,7 +70,7 @@
 	const aapl = generateStockData({
 		count: 3500,
 		startDate: new Date('2006-01-01'),
-		basePrice: 10,
+		basePrice: 1000000,
 		volatility: 0.095
 	});
 
@@ -93,14 +93,15 @@
 </script>
 
 <div class="chart-container">
-	<h2>Time-based Histogram</h2>
+	<h2>Fake stonks</h2>
 
 	<Chart.Root data={combined} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-		<Chart.Line series="aapl" x="Date" y="Close" color="blue" />
-		<Chart.Line series="goog" x="Date" y="Close" color="red" />
-		<Chart.Line series="fuuck" x="Date" y="Close" color="yellow" />
+		<Chart.Line series="goog" x="Date" y="Close" color="hotpink" />
+		<Chart.Line series="fuuck" x="Date" y="Close" color="steelblue" />
+		<Chart.Line series="aapl" x="Date" y="Close" color="aquamarine" />
 		<Chart.Axes.X />
 		<Chart.Axes.Y />
+		<Chart.Layers.Grid />
 	</Chart.Root>
 </div>
 
