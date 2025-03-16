@@ -1,7 +1,7 @@
 {
 	"name": "@jesi-rgb/uncharted",
 	"license": "MIT",
-	"version": "0.0.10",
+	"version": "0.0.11",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
@@ -36,6 +36,12 @@
 	"peerDependencies": {
 		"svelte": "^5.0.0"
 	},
+	"dependencies":{
+		"d3": "^7.9.0",
+		"d3-array": "^3.2.4",
+		"d3-axis": "^3.0.0",
+		"runed": "^0.23.3",
+	},
 	"devDependencies": {
 		"@playwright/test": "^1.45.3",
 		"@sveltejs/adapter-auto": "^3.0.0",
@@ -45,14 +51,10 @@
 		"@tailwindcss/postcss": "^4.0.0",
 		"@tailwindcss/typography": "^0.5.15",
 		"@types/d3": "^7.4.3",
-		"d3": "^7.9.0",
-		"d3-array": "^3.2.4",
-		"d3-axis": "^3.0.0",
 		"prettier": "^3.3.2",
 		"prettier-plugin-svelte": "^3.2.6",
 		"prettier-plugin-tailwindcss": "^0.6.11",
 		"publint": "^0.2.0",
-		"runed": "^0.23.3",
 		"svelte": "^5.0.0",
 		"svelte-check": "^4.0.0",
 		"typescript": "^5.0.0",
