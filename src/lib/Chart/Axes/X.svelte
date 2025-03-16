@@ -6,6 +6,10 @@
 	let { maxTicks = 10 }: AxisProps = $props();
 	let { height, margin, id } = $derived($chartStore);
 
+	$inspect(id);
+
+	let axisId = crypto.randomUUID();
+
 	let { xKey, xScale, xType } = $derived($xAxesStore);
 
 	// For categorical scales (scaleBand), we need to manually limit the ticks
@@ -32,8 +36,9 @@
 	});
 
 	$effect(() => {
-		select('#xAxis-' + id).call(axis);
+		select('#xAxis-' + id + '-' + axisId).call(axis);
 	});
 </script>
 
-<g class="font-sans" id="xAxis-{id}" transform="translate(0, {height - margin.bottom})"></g>
+<g class="font-sans" id="xAxis-{id}-{axisId}" transform="translate(0, {height - margin.bottom})"
+></g>

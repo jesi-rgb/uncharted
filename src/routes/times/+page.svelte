@@ -95,13 +95,11 @@
 <div class="chart-container">
 	<h2>Fake stonks</h2>
 
-	<Chart.Root data={combined} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-		<Chart.Line series="goog" x="Date" y="Close" color="hotpink" />
-		<Chart.Line series="fuuck" x="Date" y="Close" color="steelblue" />
-		<Chart.Line series="aapl" x="Date" y="Close" color="aquamarine" />
+	<Chart.Root data={combined} margin={{ left: 80, top: 30, right: 30, bottom: 70 }}>
+		<Chart.Line series="aapl" x="Date" y="Close" />
 		<Chart.Axes.X />
 		<Chart.Axes.Y />
-		<Chart.Layers.Grid />
+		<Chart.Layers.Grid axis="vertical" />
 	</Chart.Root>
 </div>
 

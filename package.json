@@ -40,7 +40,7 @@
 		"d3": "^7.9.0",
 		"d3-array": "^3.2.4",
 		"d3-axis": "^3.0.0",
-		"runed": "^0.23.3",
+		"runed": "^0.23.3"
 	},
 	"devDependencies": {
 		"@playwright/test": "^1.45.3",

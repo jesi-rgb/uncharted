@@ -24,10 +24,10 @@
 	}: Props = $props();
 
 	let xTicks = $derived.by(() => {
-		if (xType === 'time') {
-			return xScale.ticks ? xScale.ticks() : [];
-		} else if (xType === 'categorical') {
+		if (xType === 'categorical') {
 			return xScale.domain();
+		} else {
+			return xScale.ticks();
 		}
 	});
 	let yTicks = $derived(yScale.ticks ? yScale.ticks() : []);
@@ -36,8 +36,8 @@
 	let showYGrid = $derived(axis === 'vertical' || axis === 'both');
 </script>
 
-<g class="horizontal-lines" aria-hidden="true">
-	{#if showXGrid}
+{#if showXGrid}
+	<g class="horizontal-lines" aria-hidden="true">
 		{#each yTicks as yT}
 			<line
 				x1={margin.left}
@@ -51,11 +51,11 @@
 				{opacity}
 			/>
 		{/each}
-	{/if}
-</g>
+	</g>
+{/if}
 
-<g class="vertical-lines" aria-hidden="true">
-	{#if showYGrid}
+{#if showYGrid}
+	<g class="vertical-lines" aria-hidden="true">
 		{#each xTicks as xT}
 			{#if xType === 'categorical'}
 				<line
@@ -69,7 +69,7 @@
 					stroke-dasharray={strokeDashArray}
 					{opacity}
 				/>
-			{:else if xType === 'date'}
+			{:else}
 				<line
 					x1={xScale(xT)}
 					x2={xScale(xT)}
@@ -83,8 +83,8 @@
 				/>
 			{/if}
 		{/each}
-	{/if}
-</g>
+	</g>
+{/if}
 
 <style>
 	.grid-line {

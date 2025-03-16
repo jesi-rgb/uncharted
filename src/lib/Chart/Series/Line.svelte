@@ -12,7 +12,7 @@
 	}
 
 	let { data, margin, width, height } = $derived($chartStore);
-	const { x, y, series, color, opacity, ...rest }: Props = $props();
+	const { x, y, series, color = '#69b3a2', opacity, ...rest }: Props = $props();
 
 	let renderData = $derived.by(() => {
 		if (series) {
