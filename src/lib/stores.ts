@@ -3,8 +3,14 @@ import type { Scale, ScaleType } from "./types.js"
 
 export const chartStore = writable({});
 
-type xAxesStoreType = { xKey: string; xType: ScaleType; xScale: Scale<'number'> }
-export const xAxesStore = writable<xAxesStoreType>();
+type AxisData = {
+	key: string;
+	type: ScaleType;
+	scale: Scale<'number'>
+}
 
-type yAxesStoreType = { yKey: string; yType: ScaleType; yScale: Scale<'number'> }
-export const yAxesStore = writable<yAxesStoreType>();
+type XAxesStoreType = Record<string, AxisData>;
+export const xAxesStore = writable<XAxesStoreType>({});
+
+type YAxesStoreType = Record<string, AxisData>;
+export const yAxesStore = writable<YAxesStoreType>({});

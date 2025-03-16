@@ -11,7 +11,7 @@
 		opacity?: number;
 	}
 
-	let { data, margin, width, height } = $derived($chartStore);
+	let { id, data, margin, width, height } = $derived($chartStore);
 	const { x, y, series, color = '#69b3a2', opacity, ...rest }: Props = $props();
 
 	let renderData = $derived.by(() => {
@@ -30,24 +30,26 @@
 		createScale(renderData, y, [height - margin.bottom, margin.top])
 	);
 
-	xAxesStore.set({
-		xKey: x,
-		get xType() {
-			return xType;
-		},
-		get xScale() {
-			return xScale;
-		}
+	xAxesStore.update((store) => {
+		return {
+			...store,
+			[id]: {
+				key: x,
+				type: xType,
+				scale: xScale
+			}
+		};
 	});
 
-	yAxesStore.set({
-		yKey: y,
-		get yType() {
-			return yType;
-		},
-		get yScale() {
-			return yScale;
-		}
+	yAxesStore.update((store) => {
+		return {
+			...store,
+			[id]: {
+				key: y,
+				type: yType,
+				scale: yScale
+			}
+		};
 	});
 
 	const lineChart = $derived(

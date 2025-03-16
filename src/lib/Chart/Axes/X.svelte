@@ -6,11 +6,9 @@
 	let { maxTicks = 10 }: AxisProps = $props();
 	let { height, margin, id } = $derived($chartStore);
 
-	$inspect(id);
-
 	let axisId = crypto.randomUUID();
 
-	let { xKey, xScale, xType } = $derived($xAxesStore);
+	let { xId, xKey, xScale, xType } = $derived($xAxesStore);
 
 	// For categorical scales (scaleBand), we need to manually limit the ticks
 	let axis = $derived.by(() => {

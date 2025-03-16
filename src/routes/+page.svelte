@@ -22,28 +22,10 @@
 			<p>Grid, bars, histogram</p>
 		</div>
 
-		<Chart.Root data={ageHistogramData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-			<Chart.AxesContainer x="category" y="value">
-				<Chart.Bar />
-				<Chart.Layers.Grid />
-				<Chart.Axes.Y />
-				<Chart.Axes.X maxTicks={4} />
-			</Chart.AxesContainer>
-		</Chart.Root>
-	</div>
-
-	<div>
-		<div class="mb-10">
-			<h2>Pareto Distribution</h2>
-		</div>
-
 		<Chart.Root data={barData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-			<Chart.AxesContainer x="category" y="value">
-				<Chart.Layers.Grid axis="horizontal" />
-				<Chart.Bar />
-				<Chart.Axes.Y />
-				<Chart.Axes.X maxTicks={100} />
-			</Chart.AxesContainer>
+			<Chart.Bar x="category" y="value" />
+			<Chart.Axes.Y />
+			<Chart.Axes.X />
 		</Chart.Root>
 	</div>
 
@@ -54,22 +36,8 @@
 
 		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
 			<Chart.Line x="x" y="y" color="red" />
-			<Chart.Layers.Grid />
 			<Chart.Axes.Y />
 			<Chart.Axes.X maxTicks={20} />
-		</Chart.Root>
-	</div>
-
-	<div>
-		<div class="mb-10">
-			<h2>Extremely bad data, fancier?</h2>
-		</div>
-
-		<Chart.Root data={lineData2} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-			<Chart.Area x="x" y="y" />
-			<Chart.Layers.Grid />
-			<Chart.Axes.Y />
-			<Chart.Axes.X />
 		</Chart.Root>
 	</div>
 </div>

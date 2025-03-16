@@ -1,7 +1,11 @@
 <script lang="ts">
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
+	import { createScale } from '$lib/utils/infer-type.js';
 
 	interface Props {
+		x: string;
+		y: string;
+		series?: string;
 		color?: string;
 		patternId?: string;
 		patternAngle?: number;
@@ -11,12 +15,12 @@
 		rest?: SVGRectElement;
 	}
 
-	const { height, margin, data } = $derived($chartStore);
-
-	const { xKey, xType, xScale } = $derived($xAxesStore);
-	const { yKey, yScale } = $derived($yAxesStore);
+	const { width, height, margin, data, id } = $derived($chartStore);
 
 	let {
+		x,
+		y,
+		series,
 		color = '#69b3a2',
 		patternId = 'diagonal-pattern',
 		patternAngle = 50,
@@ -26,11 +30,49 @@
 		...rest
 	}: Props = $props();
 
+	let renderData = $derived.by(() => {
+		if (series) {
+			return data[series];
+		} else {
+			return data;
+		}
+	});
+
+	let { scale: xScale, type: xType } = $derived(
+		createScale(renderData, x, [margin.left, width - margin.right])
+	);
+
+	let { scale: yScale, type: yType } = $derived(
+		createScale(renderData, y, [height - margin.bottom, margin.top])
+	);
+
+	xAxesStore.update((store) => {
+		return {
+			...store,
+			[id]: {
+				key: x,
+				type: xType,
+				scale: xScale
+			}
+		};
+	});
+
+	yAxesStore.update((store) => {
+		return {
+			...store,
+			[id]: {
+				key: y,
+				type: yType,
+				scale: yScale
+			}
+		};
+	});
+
 	let bins = $state([]);
 	$effect(() => {
 		if (xType === 'categorical') {
-			bins = data.map((d) => d[xKey]);
-		} else if (xType === 'date') {
+			bins = renderData.map((d) => d[x]);
+		} else {
 			console.log(xScale.ticks());
 			bins = xScale.ticks();
 		}
@@ -66,8 +108,8 @@
 		{#each bins as category, i}
 			<rect
 				x={xScale(category)}
-				y={yScale(data[i][yKey])}
-				height={height - margin.bottom - yScale(data[i][yKey])}
+				y={yScale(renderData[i][y])}
+				height={height - margin.bottom - yScale(renderData[i][y])}
 				width={xScale.bandwidth()}
 				fill={`url(#${uniquePatternId})`}
 				stroke={color}
@@ -81,8 +123,8 @@
 		{#each bins as category, i}
 			<rect
 				x={xScale(category)}
-				y={yScale(data[i][yKey])}
-				height={height - margin.bottom - yScale(data[i][yKey])}
+				y={yScale(renderData[i][y])}
+				height={height - margin.bottom - yScale(renderData[i][y])}
 				width={30}
 				fill={`url(#${uniquePatternId})`}
 				stroke={color}

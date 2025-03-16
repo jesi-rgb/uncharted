@@ -2,10 +2,10 @@
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 
 	// Get scales from context
-	const { margin, width, height } = $derived($chartStore);
+	const { id, margin, width, height } = $derived($chartStore);
 
-	const { yKey, yType, yScale } = $derived($yAxesStore);
-	const { xKey, xType, xScale } = $derived($xAxesStore);
+	const { scale: yScale } = $derived($yAxesStore[id] || {});
+	const { type: xType, scale: xScale } = $derived($xAxesStore[id] || {});
 
 	interface Props {
 		axis?: 'horizontal' | 'vertical' | 'both';
