@@ -1,6 +1,7 @@
 {
-	"name": "charts",
-	"version": "0.0.1",
+	"name": "@jesi-rgb/uncharted",
+	"license": "MIT",
+	"version": "0.0.10",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build && npm run package",
