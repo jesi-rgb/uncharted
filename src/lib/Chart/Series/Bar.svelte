@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { chartContext } from '$lib/context.js';
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 	import { createScale } from '$lib/utils/infer-type.js';
 
@@ -12,10 +13,9 @@
 		patternSpacing?: number;
 		patternWidth?: number;
 		patternOpacity?: number;
+		chartId?: string;
 		rest?: SVGRectElement;
 	}
-
-	const { width, height, margin, data, id } = $derived($chartStore);
 
 	let {
 		x,
@@ -29,6 +29,17 @@
 		patternOpacity = 0.5,
 		...rest
 	}: Props = $props();
+
+	// Use the provided chartId or get it from the parent context
+	const id = chartContext.get();
+	const { width, height, margin, data } = $derived(
+		$chartStore[id] || {
+			width: undefined,
+			height: 450,
+			margin: { top: 0, right: 0, bottom: 40, left: 20 },
+			data: []
+		}
+	);
 
 	let renderData = $derived.by(() => {
 		if (series) {

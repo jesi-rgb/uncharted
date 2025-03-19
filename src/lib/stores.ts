@@ -1,7 +1,16 @@
 import { writable } from "svelte/store";
 import type { Scale, ScaleType } from "./types.js"
 
-export const chartStore = writable({});
+type ChartData = {
+	data: any;
+	width: number | undefined;
+	height: number;
+	margin: { top: number; right: number; bottom: number; left: number };
+	id: string;
+}
+
+type ChartStoreType = Record<string, ChartData>;
+export const chartStore = writable<ChartStoreType>({});
 
 type AxisData = {
 	key: string;

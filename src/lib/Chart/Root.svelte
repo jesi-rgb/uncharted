@@ -1,4 +1,5 @@
 <script lang="ts" generics="T extends Record<string, any>">
+	import { chartContext } from '$lib/context.js';
 	import { chartStore } from '$lib/stores.js';
 	import type { RootProps } from '$lib/types.js';
 
@@ -15,23 +16,27 @@
 
 	let computedMargin = $derived({ ...defaultMargin, ...margin });
 
+	chartContext.set(id);
+
 	// Set context during initialization
-	chartStore.set({
-		get data() {
-			return data;
-		},
-		get width() {
-			return width;
-		},
-		get height() {
-			return height;
-		},
-		get margin() {
-			return computedMargin;
-		},
-		get id() {
-			return id;
-		}
+	chartStore.update((store) => {
+		return {
+			...store,
+			[id]: {
+				get data() {
+					return data;
+				},
+				get width() {
+					return width;
+				},
+				get height() {
+					return height;
+				},
+				get margin() {
+					return computedMargin;
+				}
+			}
+		};
 	});
 </script>
 

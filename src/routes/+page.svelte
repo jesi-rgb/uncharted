@@ -28,18 +28,6 @@
 			<Chart.Axes.X />
 		</Chart.Root>
 	</div>
-
-	<div>
-		<div class="mb-10">
-			<h2>Extremely bad data</h2>
-		</div>
-
-		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-			<Chart.Line x="x" y="y" color="red" />
-			<Chart.Axes.Y />
-			<Chart.Axes.X maxTicks={20} />
-		</Chart.Root>
-	</div>
 </div>
 
 <style>

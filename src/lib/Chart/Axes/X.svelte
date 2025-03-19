@@ -1,14 +1,23 @@
 <script lang="ts">
+	import { chartContext } from '$lib/context.js';
 	import { chartStore, xAxesStore } from '$lib/stores.js';
 	import type { AxisProps } from '$lib/types.js';
 	import { axisBottom, select } from 'd3';
 
+	let id = chartContext.get();
+
 	let { maxTicks = 10 }: AxisProps = $props();
-	let { height, margin, id } = $derived($chartStore);
+	let { height, margin } = $derived($chartStore[id]);
 
 	let axisId = crypto.randomUUID();
 
-	let { xId, xKey, xScale, xType } = $derived($xAxesStore);
+	let {
+		key: xKey,
+		scale: xScale,
+		type: xType
+	} = $derived($xAxesStore[id] || { key: undefined, scale: undefined, type: undefined });
+
+	$inspect({ xKey, xScale, xType });
 
 	// For categorical scales (scaleBand), we need to manually limit the ticks
 	let axis = $derived.by(() => {

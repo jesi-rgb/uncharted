@@ -2,21 +2,19 @@
 	import { axisLeft, axisRight, format, select, type ScaleLinear } from 'd3';
 	import type { AxisProps } from '$lib/types.js';
 	import { chartStore, yAxesStore } from '$lib/stores.js';
+	import { chartContext } from '$lib/context.js';
 
-	let { margin, id, width } = $derived($chartStore);
-	let { yScale } = $derived($yAxesStore);
+	let id = chartContext.get();
+	let { margin, width } = $derived($chartStore[id]);
+	let { scale: yScale } = $derived($yAxesStore[id] || { scale: undefined });
 	let { right = false, ...rest }: AxisProps = $props();
 
 	let axisId = crypto.randomUUID();
 
 	let axis = $derived.by(() => {
-		let axis;
-		if (right) {
-			axis = axisRight(yScale);
-		} else {
-			axis = axisLeft(yScale);
-		}
-		return axis;
+		if (right) return axisRight(yScale);
+
+		return axisLeft(yScale);
 	});
 
 	$effect(() => {
