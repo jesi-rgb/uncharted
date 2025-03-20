@@ -10,11 +10,15 @@ import {
 	extent
 } from 'd3';
 
+
+import type { DataType } from '$lib/types.js';
+
 type ScaleType =
 	| ScaleLinear<number, number, any>
 	| ScaleBand<string>
 	| ScaleTime<number, number, any>
 	| ScaleLogarithmic<number, number, never>;
+
 
 
 interface InferredType {

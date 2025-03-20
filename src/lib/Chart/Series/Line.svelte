@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { chartContext } from '$lib/context.js';
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 	import { createScale } from '$lib/utils/infer-type.js';
 	import { line } from 'd3';
@@ -11,7 +12,9 @@
 		opacity?: number;
 	}
 
-	let { id, data, margin, width, height } = $derived($chartStore);
+	const id = chartContext.get();
+
+	let { data, margin, width, height } = $derived($chartStore[id]);
 	const { x, y, series, color = '#69b3a2', opacity, ...rest }: Props = $props();
 
 	let renderData = $derived.by(() => {
@@ -30,26 +33,28 @@
 		createScale(renderData, y, [height - margin.bottom, margin.top])
 	);
 
-	xAxesStore.update((store) => {
-		return {
-			...store,
-			[id]: {
-				key: x,
-				type: xType,
-				scale: xScale
-			}
-		};
-	});
+	$effect(() => {
+		xAxesStore.update((store) => {
+			return {
+				...store,
+				[id]: {
+					key: x,
+					type: xType,
+					scale: xScale
+				}
+			};
+		});
 
-	yAxesStore.update((store) => {
-		return {
-			...store,
-			[id]: {
-				key: y,
-				type: yType,
-				scale: yScale
-			}
-		};
+		yAxesStore.update((store) => {
+			return {
+				...store,
+				[id]: {
+					key: y,
+					type: yType,
+					scale: yScale
+				}
+			};
+		});
 	});
 
 	const lineChart = $derived(

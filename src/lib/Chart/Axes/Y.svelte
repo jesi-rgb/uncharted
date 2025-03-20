@@ -1,13 +1,15 @@
 <script lang="ts">
-	import { axisLeft, axisRight, format, select, type ScaleLinear } from 'd3';
-	import type { AxisProps } from '$lib/types.js';
+	import { axisLeft, axisRight, select } from 'd3';
+	import type { YAxisProps } from '$lib/types.js';
 	import { chartStore, yAxesStore } from '$lib/stores.js';
 	import { chartContext } from '$lib/context.js';
 
 	let id = chartContext.get();
+
 	let { margin, width } = $derived($chartStore[id]);
 	let { scale: yScale } = $derived($yAxesStore[id] || { scale: undefined });
-	let { right = false, ...rest }: AxisProps = $props();
+
+	let { right = false, ...rest }: YAxisProps = $props();
 
 	let axisId = crypto.randomUUID();
 

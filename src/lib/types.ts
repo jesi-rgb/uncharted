@@ -3,7 +3,7 @@ import type { Snippet } from "svelte";
 
 export type DataPoint = Record<string, any>;
 
-export type ScaleType = 'number' | 'time' | 'text' | 'categorical' | 'logarithmic';
+export type DataType = 'number' | 'time' | 'text' | 'categorical' | 'logarithmic';
 
 export type Scale<T> =
 	T extends 'number' ? ScaleLinear<number, number> :
@@ -13,8 +13,8 @@ export type Scale<T> =
 	never;
 
 export type ChartScales = {
-	x: Scale<ScaleType>;
-	y: Scale<ScaleType>;
+	x: Scale<DataType>;
+	y: Scale<DataType>;
 };
 
 export type ChartContext<T extends Record<string, any>> = {
@@ -53,6 +53,10 @@ export type AxisProps = {
 	tickSize?: number;
 	tickPadding?: number;
 	tickFormat?: (value: any) => string;
+}
+
+export type YAxisProps = AxisProps & {
+	right?: boolean;
 }
 
 export type SeriesProps = {

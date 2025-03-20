@@ -6,18 +6,15 @@
 
 	let id = chartContext.get();
 
+	let { height, margin, width } = $derived($chartStore[id] || {});
+	let { key: xKey, scale: xScale, type: xType } = $derived($xAxesStore[id] || {});
+
 	let { maxTicks = 10 }: AxisProps = $props();
-	let { height, margin } = $derived($chartStore[id]);
 
 	let axisId = crypto.randomUUID();
 
-	let {
-		key: xKey,
-		scale: xScale,
-		type: xType
-	} = $derived($xAxesStore[id] || { key: undefined, scale: undefined, type: undefined });
-
-	$inspect({ xKey, xScale, xType });
+	// Ensure we're using the scale directly from the store without modifying its range
+	$inspect('x', xScale?.range(), width);
 
 	// For categorical scales (scaleBand), we need to manually limit the ticks
 	let axis = $derived.by(() => {

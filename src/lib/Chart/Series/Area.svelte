@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { chartContext } from '$lib/context.js';
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 	import { area, curveCatmullRom } from 'd3';
 
@@ -8,12 +9,14 @@
 		color?: string;
 	}
 
-	const { height, margin, data } = $derived($chartStore);
+	//TODO: fix area
+	const id = chartContext.get();
+	const { height, margin, data } = $derived($chartStore[id]);
 
 	let { color = '#69b3a2', opacity = 0.3 }: Props = $props();
 
-	const { xKey, xScale } = $derived($xAxesStore);
-	const { yKey, yScale } = $derived($yAxesStore);
+	const { xKey, xScale } = $derived($xAxesStore[id]);
+	const { yKey, yScale } = $derived($yAxesStore[id]);
 
 	let categories = $derived(data.map((d) => d[xKey]));
 

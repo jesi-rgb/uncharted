@@ -30,16 +30,9 @@
 		...rest
 	}: Props = $props();
 
-	// Use the provided chartId or get it from the parent context
 	const id = chartContext.get();
-	const { width, height, margin, data } = $derived(
-		$chartStore[id] || {
-			width: undefined,
-			height: 450,
-			margin: { top: 0, right: 0, bottom: 40, left: 20 },
-			data: []
-		}
-	);
+
+	const { width, height, margin, data } = $derived($chartStore[id]);
 
 	let renderData = $derived.by(() => {
 		if (series) {
@@ -53,38 +46,40 @@
 		createScale(renderData, x, [margin.left, width - margin.right])
 	);
 
+	$inspect('bar', xScale.range(), width, margin);
+
 	let { scale: yScale, type: yType } = $derived(
 		createScale(renderData, y, [height - margin.bottom, margin.top])
 	);
 
-	xAxesStore.update((store) => {
-		return {
-			...store,
-			[id]: {
-				key: x,
-				type: xType,
-				scale: xScale
-			}
-		};
-	});
-
-	yAxesStore.update((store) => {
-		return {
-			...store,
-			[id]: {
-				key: y,
-				type: yType,
-				scale: yScale
-			}
-		};
-	});
-
 	let bins = $state([]);
+	// Update the store whenever the scale or its dependencies change
 	$effect(() => {
+		xAxesStore.update((store) => {
+			return {
+				...store,
+				[id]: {
+					key: x,
+					type: xType,
+					scale: xScale
+				}
+			};
+		});
+
+		yAxesStore.update((store) => {
+			return {
+				...store,
+				[id]: {
+					key: y,
+					type: yType,
+					scale: yScale
+				}
+			};
+		});
+
 		if (xType === 'categorical') {
 			bins = renderData.map((d) => d[x]);
 		} else {
-			console.log(xScale.ticks());
 			bins = xScale.ticks();
 		}
 	});
@@ -129,7 +124,7 @@
 			/>
 		{/each}
 	</g>
-{:else if xType === 'date'}
+{:else if xType === 'time'}
 	<g class="bar-series">
 		{#each bins as category, i}
 			<rect

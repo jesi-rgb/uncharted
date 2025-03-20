@@ -7,12 +7,15 @@
 	let defaultMargin = { top: 0, right: 0, bottom: 40, left: 20 };
 	let {
 		data,
-		width = undefined,
+		width,
 		height = 450,
 		margin = defaultMargin,
 		children,
 		...rest
 	}: RootProps<T> = $props();
+
+	let chartWidth: number = $state(width || 800);
+	//$inspect(chartWidth);
 
 	let computedMargin = $derived({ ...defaultMargin, ...margin });
 
@@ -27,7 +30,7 @@
 					return data;
 				},
 				get width() {
-					return width;
+					return chartWidth;
 				},
 				get height() {
 					return height;
@@ -40,8 +43,8 @@
 	});
 </script>
 
-<div bind:clientWidth={width}>
-	<svg {width} {height} {...rest}>
+<div bind:clientWidth={chartWidth}>
+	<svg width={chartWidth} {height} {...rest}>
 		{@render children()}
 	</svg>
 </div>
