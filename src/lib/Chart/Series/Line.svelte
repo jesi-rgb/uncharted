@@ -2,12 +2,13 @@
 	import { chartContext } from '$lib/context.js';
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 	import { createScale } from '$lib/utils/infer-type.js';
-	import { line } from 'd3';
+	import { curveBasis, curveMonotoneX, curveStep, line } from 'd3';
 
 	interface Props {
 		x: string;
 		y: string;
 		series?: string;
+		curve?: 'none' | 'curved' | 'monotone' | 'step';
 		color?: string;
 		opacity?: number;
 	}
@@ -15,7 +16,7 @@
 	const id = chartContext.get();
 
 	let { data, margin, width, height } = $derived($chartStore[id]);
-	const { x, y, series, color = '#69b3a2', opacity, ...rest }: Props = $props();
+	const { x, y, series, color = '#69b3a2', curve = 'none', opacity, ...rest }: Props = $props();
 
 	let renderData = $derived.by(() => {
 		if (series) {
@@ -57,11 +58,27 @@
 		});
 	});
 
-	const lineChart = $derived(
-		line()
+	const lineChart = $derived.by(() => {
+		const l = line()
 			.x((d) => xScale(d[x]))
-			.y((d) => yScale(d[y]))
-	);
+			.y((d) => yScale(d[y]));
+
+		switch (curve) {
+			case 'curved':
+				l.curve(curveBasis);
+				break;
+			case 'monotone':
+				l.curve(curveMonotoneX);
+				break;
+			case 'step':
+				l.curve(curveStep);
+				break;
+			default:
+				break;
+		}
+
+		return l;
+	});
 </script>
 
 <g id="line">

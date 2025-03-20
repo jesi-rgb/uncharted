@@ -1,24 +1,63 @@
 <script lang="ts">
 	import { chartContext } from '$lib/context.js';
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
-	import { area, curveCatmullRom } from 'd3';
+	import { createScale } from '$lib/utils/infer-type.js';
+	import { area, curveBasis, curveCardinal, curveCatmullRom, curveMonotoneX, curveStep } from 'd3';
 
 	interface Props {
 		x: string;
 		y: string;
+		series?: string;
 		color?: string;
+		curve?: 'none' | 'curved' | 'monotone' | 'step';
+		opacity?: number;
 	}
 
-	//TODO: fix area
 	const id = chartContext.get();
-	const { height, margin, data } = $derived($chartStore[id]);
 
-	let { color = '#69b3a2', opacity = 0.3 }: Props = $props();
+	const { width, height, margin, data } = $derived($chartStore[id]);
 
-	const { xKey, xScale } = $derived($xAxesStore[id]);
-	const { yKey, yScale } = $derived($yAxesStore[id]);
+	let { x, y, color = '#69b3a2', series, opacity = 0.3, curve = 'none' }: Props = $props();
 
-	let categories = $derived(data.map((d) => d[xKey]));
+	let renderData = $derived.by(() => {
+		if (series) {
+			return data[series];
+		} else {
+			return data;
+		}
+	});
+
+	let { scale: xScale, type: xType } = $derived(
+		createScale(renderData, x, [margin.left, width - margin.right])
+	);
+
+	let { scale: yScale, type: yType } = $derived(
+		createScale(renderData, y, [height - margin.bottom, margin.top])
+	);
+
+	$effect(() => {
+		xAxesStore.update((store) => {
+			return {
+				...store,
+				[id]: {
+					key: x,
+					type: xType,
+					scale: xScale
+				}
+			};
+		});
+
+		yAxesStore.update((store) => {
+			return {
+				...store,
+				[id]: {
+					key: y,
+					type: yType,
+					scale: yScale
+				}
+			};
+		});
+	});
 
 	// Create transparent fill color
 	let fillColor = $derived.by(() => {
@@ -49,13 +88,29 @@
 		return color;
 	});
 
-	const areaChart = $derived(
-		area()
-			.x((d) => xScale(d[xKey]))
+	const areaChart = $derived.by(() => {
+		let a = area()
+			.x((d) => xScale(d[x]))
 			.y0(height - margin.bottom)
-			.y1((d) => yScale(d[yKey]))
-			.curve(curveCatmullRom)
-	);
+			.y1((d) => yScale(d[y]))
+			.curve(curveBasis);
+
+		switch (curve) {
+			case 'curved':
+				a.curve(curveBasis);
+				break;
+			case 'monotone':
+				a.curve(curveMonotoneX);
+				break;
+			case 'step':
+				a.curve(curveStep);
+				break;
+			default:
+				break;
+		}
+
+		return a;
+	});
 </script>
 
 <defs>
