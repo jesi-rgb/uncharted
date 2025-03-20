@@ -9,7 +9,7 @@
 		y: string;
 		series?: string;
 		color?: string;
-		curve?: 'none' | 'curved' | 'monotone' | 'step';
+		curve?: 'none' | 'smooth' | 'monotone' | 'step';
 		opacity?: number;
 	}
 
@@ -17,7 +17,7 @@
 
 	const { width, height, margin, data } = $derived($chartStore[id]);
 
-	let { x, y, color = '#69b3a2', series, opacity = 0.3, curve = 'none' }: Props = $props();
+	let { x, y, color = '#69b3a2', series, opacity = 0.3, curve = 'smooth' }: Props = $props();
 
 	let renderData = $derived.by(() => {
 		if (series) {
@@ -92,11 +92,10 @@
 		let a = area()
 			.x((d) => xScale(d[x]))
 			.y0(height - margin.bottom)
-			.y1((d) => yScale(d[y]))
-			.curve(curveBasis);
+			.y1((d) => yScale(d[y]));
 
 		switch (curve) {
-			case 'curved':
+			case 'smooth':
 				a.curve(curveBasis);
 				break;
 			case 'monotone':

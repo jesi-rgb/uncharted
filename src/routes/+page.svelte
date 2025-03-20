@@ -5,7 +5,7 @@
 
 	const ageHistogramData = generateBarData({ distribution: 'normal' });
 	const barData = $derived(generateBarData({ distribution: 'pareto', categories: 100 }));
-	const lineData = generateLineData({ points: 1000, maxY: 10000, noise: 0.001 });
+	const lineData = generateLineData({ points: 100, maxY: 50, noise: 0.001 });
 	const lineData2 = generateLineData();
 
 	const timeData = generateTimeSeriesData({
@@ -31,7 +31,13 @@
 		</Chart.Root>
 
 		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-			<Chart.Area x="x" y="y" curve="curved" />
+			<Chart.Area x="x" y="y" />
+			<Chart.Axes.Y />
+			<Chart.Axes.X />
+		</Chart.Root>
+
+		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
+			<Chart.Line x="x" y="y" curve="none" />
 			<Chart.Axes.Y />
 			<Chart.Axes.X />
 		</Chart.Root>
