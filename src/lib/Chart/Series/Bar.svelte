@@ -46,7 +46,7 @@
 		createScale(renderData, x, [margin.left, width - margin.right])
 	);
 
-	$inspect('bar', xScale.range(), width, margin);
+	//$inspect('bar', xScale.range(), width, margin);
 
 	let { scale: yScale, type: yType } = $derived(
 		createScale(renderData, y, [height - margin.bottom, margin.top])

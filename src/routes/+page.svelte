@@ -13,6 +13,8 @@
 		uniqueItems: 3,
 		distribution: 'seasonal'
 	});
+
+	console.log(ageHistogramData);
 </script>
 
 <div>
@@ -22,8 +24,8 @@
 			<p>Grid, bars, histogram</p>
 		</div>
 
-		<Chart.Root data={barData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-			<Chart.Area x="category" y="value" />
+		<Chart.Root data={ageHistogramData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
+			<Chart.Bar x="category" y="value" />
 			<Chart.Axes.Y />
 			<Chart.Axes.X />
 		</Chart.Root>

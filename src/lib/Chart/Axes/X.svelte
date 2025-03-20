@@ -14,7 +14,7 @@
 	let axisId = crypto.randomUUID();
 
 	// Ensure we're using the scale directly from the store without modifying its range
-	$inspect('x', xScale?.range(), width);
+	//$inspect('x', xScale?.range(), width);
 
 	// For categorical scales (scaleBand), we need to manually limit the ticks
 	let axis = $derived.by(() => {
