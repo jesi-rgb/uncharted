@@ -7,7 +7,10 @@ import {
 	type ScaleBand,
 	type ScaleTime,
 	type ScaleLogarithmic,
-	extent
+	extent,
+	type ScaleQuantize,
+	scaleQuantize,
+	scaleQuantile
 } from 'd3';
 
 
@@ -16,7 +19,7 @@ import type { DataType } from '$lib/types.js';
 type ScaleType =
 	| ScaleLinear<number, number, any>
 	| ScaleBand<string>
-	| ScaleTime<number, number, any>
+	| ScaleTime<number, number> // for time
 	| ScaleLogarithmic<number, number, never>;
 
 
@@ -150,7 +153,7 @@ export function inferType<T>(data: T[], key: keyof T): InferredType {
 	// Check if all values are dates
 	if (allDates(values)) {
 		return {
-			type: 'date',
+			type: 'time',
 			scale: scaleTime()
 		};
 	}
@@ -185,11 +188,10 @@ export function setDomain<T>(
 		case 'logarithmic':
 			return (scale as ScaleLinear<number, number>).domain(extent(values));
 
-		case 'date':
+		case 'time':
 			const dateValues = values.map(v => new Date(v as string | number | Date));
-			const minDate = new Date(Math.min(...dateValues.map(d => d.getTime())));
-			const maxDate = new Date(Math.max(...dateValues.map(d => d.getTime())));
-			return (scale as ScaleTime<number, number>).domain([minDate, maxDate]);
+
+			return scale.domain(extent(dateValues));
 
 		case 'categorical':
 		case 'text':
@@ -218,7 +220,7 @@ export function setRange(
 	switch (type) {
 		case 'number':
 		case 'logarithmic':
-		case 'date':
+		case 'time':
 			return (scale as ScaleLinear<number, number>).range(range);
 
 		case 'categorical':
@@ -227,8 +229,6 @@ export function setRange(
 
 			return bandScale.range(range);
 
-		default:
-			return scale.range(range);
 	}
 }
 

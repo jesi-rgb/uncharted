@@ -8,7 +8,7 @@ export type DataType = 'number' | 'time' | 'text' | 'categorical' | 'logarithmic
 export type Scale<T> =
 	T extends 'number' ? ScaleLinear<number, number> :
 	T extends 'logarithmic' ? ScaleLogarithmic<number, number> :
-	T extends 'time' ? ScaleTime<number, number> :
+	T extends 'time' ? ScaleBand<string> :
 	T extends 'categorical' | 'text' ? ScaleBand<string> :
 	never;
 

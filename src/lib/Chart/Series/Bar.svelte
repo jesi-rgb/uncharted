@@ -13,6 +13,7 @@
 		patternSpacing?: number;
 		patternWidth?: number;
 		patternOpacity?: number;
+		barWidth?: number;
 		chartId?: string;
 		rest?: SVGRectElement;
 	}
@@ -21,6 +22,7 @@
 		x,
 		y,
 		series,
+		barWidth = 30,
 		color = '#69b3a2',
 		patternId = 'diagonal-pattern',
 		patternAngle = 50,
@@ -43,16 +45,23 @@
 	});
 
 	let { scale: xScale, type: xType } = $derived(
-		createScale(renderData, x, [margin.left, width - margin.right])
+		createScale(renderData, x, [margin.left, width! - margin.right])
 	);
 
-	//$inspect('bar', xScale.range(), width, margin);
+	$inspect(renderData, xType);
 
 	let { scale: yScale, type: yType } = $derived(
 		createScale(renderData, y, [height - margin.bottom, margin.top])
 	);
 
-	let bins = $state([]);
+	let bins = $derived.by(() => {
+		if (xType === 'categorical') {
+			return renderData.map((d) => d[x]);
+		} else {
+			return xScale.ticks();
+		}
+	});
+
 	// Update the store whenever the scale or its dependencies change
 	$effect(() => {
 		xAxesStore.update((store) => {
@@ -76,12 +85,6 @@
 				}
 			};
 		});
-
-		if (xType === 'categorical') {
-			bins = renderData.map((d) => d[x]);
-		} else {
-			bins = xScale.ticks();
-		}
 	});
 
 	// Generate a unique ID for this instance's pattern
@@ -109,8 +112,8 @@
 	</pattern>
 </defs>
 
-{#if xType === 'categorical'}
-	<g class="bar-series">
+<g class="bar-series">
+	{#if xType === 'categorical'}
 		{#each bins as category, i}
 			<rect
 				x={xScale(category)}
@@ -123,20 +126,18 @@
 				{...rest}
 			/>
 		{/each}
-	</g>
-{:else if xType === 'time'}
-	<g class="bar-series">
+	{:else if xType === 'time'}
 		{#each bins as category, i}
 			<rect
-				x={xScale(category)}
+				x={xScale(category) - barWidth / 2}
 				y={yScale(renderData[i][y])}
 				height={height - margin.bottom - yScale(renderData[i][y])}
-				width={30}
+				width={barWidth}
 				fill={`url(#${uniquePatternId})`}
 				stroke={color}
 				stroke-width="0.9"
 				{...rest}
 			/>
 		{/each}
-	</g>
-{/if}
+	{/if}
+</g>

@@ -21,8 +21,8 @@
 		axis = 'both',
 		stroke = 'currentColor',
 		strokeWidth = 1,
-		strokeDashArray = '5 10',
-		opacity = 0.3
+		strokeDashArray = '0 0',
+		opacity = 0.1
 	}: Props = $props();
 
 	let xTicks = $derived.by(() => {
