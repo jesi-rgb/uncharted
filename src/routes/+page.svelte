@@ -13,8 +13,6 @@
 		uniqueItems: 3,
 		distribution: 'seasonal'
 	});
-
-	console.log(lineData);
 </script>
 
 <div>
@@ -28,6 +26,7 @@
 			<Chart.Bar x="category" y="value" />
 			<Chart.Axes.Y />
 			<Chart.Axes.X />
+			<Chart.Layers.Grid axis="vertical" />
 		</Chart.Root>
 
 		<Chart.Root data={lineData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>

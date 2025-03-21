@@ -15,7 +15,6 @@
 	}: RootProps<T> = $props();
 
 	let chartWidth: number = $state(width || 800);
-	//$inspect(chartWidth);
 
 	let computedMargin = $derived({ ...defaultMargin, ...margin });
 

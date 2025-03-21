@@ -1,11 +1,15 @@
 <script lang="ts">
+	import { chartContext } from '$lib/context.js';
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 
-	// Get scales from context
-	const { id, margin, width, height } = $derived($chartStore);
+	const id = chartContext.get();
+
+	const { margin, width, height } = $derived($chartStore[id]);
 
 	const { scale: yScale } = $derived($yAxesStore[id] || {});
 	const { type: xType, scale: xScale } = $derived($xAxesStore[id] || {});
+
+	$inspect(xType, xScale);
 
 	interface Props {
 		axis?: 'horizontal' | 'vertical' | 'both';
@@ -24,19 +28,21 @@
 	}: Props = $props();
 
 	let xTicks = $derived.by(() => {
+		if (!xScale) return [];
 		if (xType === 'categorical') {
-			return xScale.domain();
+			return xScale.domain ? xScale.domain() : [];
 		} else {
-			return xScale.ticks();
+			return xScale.ticks ? xScale.ticks() : [];
 		}
 	});
-	let yTicks = $derived(yScale.ticks ? yScale.ticks() : []);
+
+	let yTicks = $derived(yScale?.ticks ? yScale.ticks() : []);
 
 	let showXGrid = $derived(axis === 'horizontal' || axis === 'both');
 	let showYGrid = $derived(axis === 'vertical' || axis === 'both');
 </script>
 
-{#if showXGrid}
+{#if showXGrid && yScale && yTicks.length}
 	<g class="horizontal-lines" aria-hidden="true">
 		{#each yTicks as yT}
 			<line
@@ -54,10 +60,10 @@
 	</g>
 {/if}
 
-{#if showYGrid}
+{#if showYGrid && xScale && xTicks.length}
 	<g class="vertical-lines" aria-hidden="true">
 		{#each xTicks as xT}
-			{#if xType === 'categorical'}
+			{#if xType === 'categorical' && xScale.bandwidth}
 				<line
 					x1={xScale(xT) + xScale.bandwidth() / 2}
 					x2={xScale(xT) + xScale.bandwidth() / 2}
@@ -69,7 +75,7 @@
 					stroke-dasharray={strokeDashArray}
 					{opacity}
 				/>
-			{:else}
+			{:else if xScale}
 				<line
 					x1={xScale(xT)}
 					x2={xScale(xT)}

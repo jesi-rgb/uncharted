@@ -118,6 +118,7 @@
 		<stop offset="95%" stop-color={fillColor} stop-opacity={0} />
 	</linearGradient>
 </defs>
+
 <g id="area">
 	<path d={areaChart(data)} fill={'url(#gradient)'} stroke-width="1.2" stroke={color}></path>
 </g>
