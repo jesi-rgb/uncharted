@@ -9,8 +9,6 @@
 	const { scale: yScale } = $derived($yAxesStore[id] || {});
 	const { type: xType, scale: xScale } = $derived($xAxesStore[id] || {});
 
-	$inspect(xType, xScale);
-
 	interface Props {
 		axis?: 'horizontal' | 'vertical' | 'both';
 		stroke?: string;
