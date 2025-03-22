@@ -2,6 +2,8 @@
 	import { chartContext } from '$lib/context.js';
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 	import { createScale } from '$lib/utils/infer-type.js';
+	import { scaleBand, timeHour, timeHours, timeMonth, timeMonths } from 'd3';
+	import { extent } from 'd3-array';
 
 	interface Props {
 		x: string;
@@ -48,7 +50,13 @@
 		createScale(renderData, x, [margin.left, width! - margin.right])
 	);
 
-	$inspect(renderData, xType);
+	function getTickWidth(scale, interval) {
+		const start = scale.domain()[0];
+		const next = interval.offset(start, 1); // Get next tick using d3 time interval
+		return Math.abs(scale(next) - scale(start));
+	}
+
+	const tickWidth = $derived(getTickWidth(xScale, timeHour));
 
 	let { scale: yScale, type: yType } = $derived(
 		createScale(renderData, y, [height - margin.bottom, margin.top])
@@ -115,10 +123,13 @@
 <g class="bar-series">
 	{#if xType === 'categorical'}
 		{#each bins as category, i}
+			{@const yValue = renderData[i][y]}
+			{@const barHeight = yValue === 0 ? 2 : height - margin.bottom - yScale(yValue)}
+			{@const yPos = yValue === 0 ? height - margin.bottom - 2 : yScale(yValue)}
 			<rect
 				x={xScale(category)}
-				y={yScale(renderData[i][y])}
-				height={height - margin.bottom - yScale(renderData[i][y])}
+				y={yPos}
+				height={barHeight}
 				width={xScale.bandwidth()}
 				fill={`url(#${uniquePatternId})`}
 				stroke={color}
@@ -127,12 +138,17 @@
 			/>
 		{/each}
 	{:else if xType === 'time'}
-		{#each bins as category, i}
+		{#each renderData as dataPoint}
+			{@const dataDate = new Date(dataPoint[x])}
+			{@const yValue = dataPoint[y]}
+			{@const barHeight = yValue === 0 ? 2 : height - margin.bottom - yScale(yValue)}
+
+			{@const yPos = yValue === 0 ? height - margin.bottom - 2 : yScale(yValue)}
 			<rect
-				x={xScale(category) - barWidth / 2}
-				y={yScale(renderData[i][y])}
-				height={height - margin.bottom - yScale(renderData[i][y])}
-				width={barWidth}
+				x={xScale(dataDate)}
+				y={yPos}
+				height={barHeight}
+				width={tickWidth}
 				fill={`url(#${uniquePatternId})`}
 				stroke={color}
 				stroke-width="0.9"

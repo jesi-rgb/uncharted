@@ -183,6 +183,8 @@ export function setDomain<T>(
 
 	if (values.length === 0) return scale;
 
+	if (values.every(v => v === 0)) return scale.domain([0, 10]);
+
 	switch (type) {
 		case 'number':
 		case 'logarithmic':
@@ -191,7 +193,7 @@ export function setDomain<T>(
 		case 'time':
 			const dateValues = values.map(v => new Date(v as string | number | Date));
 
-			return scale.domain(extent(dateValues));
+			return scale.domain(extent(dateValues!));
 
 		case 'categorical':
 		case 'text':
