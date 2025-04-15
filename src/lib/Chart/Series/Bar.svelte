@@ -14,7 +14,8 @@
 		patternSpacing?: number;
 		patternWidth?: number;
 		patternOpacity?: number;
-		barWidth?: number;
+		barWidth?: number; // from 0 to 1
+		innerPadding?: number;
 		chartId?: string;
 		rest?: SVGRectElement;
 	}
@@ -30,6 +31,7 @@
 		patternSpacing = 5,
 		patternWidth = 1,
 		patternOpacity = 0.5,
+		innerPadding: barInnerWidth = 0,
 		...rest
 	}: Props = $props();
 
@@ -61,6 +63,8 @@
 		createScale(renderData, y, [height - margin.bottom, margin.top])
 	);
 
+	let xScaleFlavoured = $derived(xScale.copy().padding(barInnerWidth));
+
 	let bins = $derived.by(() => {
 		if (xType === 'categorical') {
 			return renderData.map((d) => d[x]);
@@ -77,7 +81,7 @@
 				[id]: {
 					key: x,
 					type: xType,
-					scale: xScale
+					scale: xScaleFlavoured
 				}
 			};
 		});
@@ -126,10 +130,10 @@
 			{@const barHeight = height - margin.bottom - yScale(yValue)}
 			{@const yPos = yValue === 0 ? height - margin.bottom - 0 : yScale(yValue)}
 			<rect
-				x={xScale(category)}
+				x={xScaleFlavoured(category)}
 				y={yPos}
 				height={barHeight}
-				width={xScale.bandwidth()}
+				width={xScaleFlavoured.bandwidth()}
 				fill={`url(#${uniquePatternId})`}
 				stroke={color}
 				stroke-width="0.9"
