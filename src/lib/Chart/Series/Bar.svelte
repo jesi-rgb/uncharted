@@ -124,8 +124,8 @@
 	{#if xType === 'categorical'}
 		{#each bins as category, i}
 			{@const yValue = renderData[i][y]}
-			{@const barHeight = yValue === 0 ? 2 : height - margin.bottom - yScale(yValue)}
-			{@const yPos = yValue === 0 ? height - margin.bottom - 2 : yScale(yValue)}
+			{@const barHeight = height - margin.bottom - yScale(yValue)}
+			{@const yPos = yValue === 0 ? height - margin.bottom - 0 : yScale(yValue)}
 			<rect
 				x={xScale(category)}
 				y={yPos}
@@ -141,12 +141,11 @@
 		{#each renderData as dataPoint}
 			{@const dataDate = new Date(dataPoint[x])}
 			{@const yValue = dataPoint[y]}
-			{@const barHeight = yValue === 0 ? 2 : height - margin.bottom - yScale(yValue)}
+			{@const barHeight = height - margin.bottom - yScale(yValue)}
 
-			{@const yPos = yValue === 0 ? height - margin.bottom - 2 : yScale(yValue)}
 			<rect
 				x={xScale(dataDate)}
-				y={yPos}
+				y={yScale(yValue)}
 				height={barHeight}
 				width={tickWidth}
 				fill={`url(#${uniquePatternId})`}
