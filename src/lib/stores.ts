@@ -3,7 +3,7 @@ import type { Scale, ScaleType } from "./types.js"
 
 type ChartData = {
 	data: any;
-	width: number | undefined;
+	width: number;
 	height: number;
 	margin: { top: number; right: number; bottom: number; left: number };
 	id: string;

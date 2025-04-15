@@ -57,6 +57,7 @@ export type AxisProps = {
 
 export type YAxisProps = AxisProps & {
 	right?: boolean;
+	log?: boolean
 }
 
 export type SeriesProps = {

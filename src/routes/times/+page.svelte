@@ -16,54 +16,58 @@
 		basePrice = 150,
 		volatility = 0.02
 	} = {}) {
-		const result = [];
-		let currentPrice = basePrice;
+		const data = [];
+		let currentDate = new Date(startDate);
+		let lastClose = basePrice;
 
 		for (let i = 0; i < count; i++) {
-			// Create date for this entry (weekdays only)
-			const currentDate = new Date(startDate);
-			currentDate.setDate(startDate.getDate() + i);
+			const open = parseFloat(
+				(lastClose * (1 + (Math.random() - 0.5) * volatility * 0.1)).toFixed(2)
+			); // Slight variation for open from previous close
+			const changePercent = (Math.random() - 0.5) * 2 * volatility; // Random change percentage
+			let close = parseFloat((open * (1 + changePercent)).toFixed(2));
 
-			// Skip weekends
-			const day = currentDate.getDay();
-			if (day === 0 || day === 6) {
-				count++; // Add an extra day to compensate
-				continue;
+			// Ensure close price is positive
+			if (close < 0) {
+				close = Math.abs(close) * 0.1; // Reset to a small positive value if it goes negative
+				if (close === 0) close = 0.01; // Ensure it's not exactly zero
 			}
 
-			// Generate random price movement (random walk with drift)
-			const changePercent = (Math.random() - 0.5) * volatility * 2;
-			const priceChange = currentPrice * changePercent;
+			const highFluctuation = Math.random() * volatility * 0.5;
+			const lowFluctuation = Math.random() * volatility * 0.5;
 
-			// Calculate daily values
-			const open = currentPrice;
-			const close = currentPrice + priceChange;
+			let high = parseFloat((Math.max(open, close) * (1 + highFluctuation)).toFixed(2));
+			let low = parseFloat((Math.min(open, close) * (1 - lowFluctuation)).toFixed(2));
 
-			// Determine high and low (random within reasonable range)
-			const highExtra = Math.random() * Math.abs(priceChange) * 0.5;
-			const lowExtra = Math.random() * Math.abs(priceChange) * 0.5;
+			// Ensure low is positive and less than high
+			if (low <= 0) {
+				low = Math.min(open, close) * 0.9; // Adjust if low becomes non-positive
+				if (low <= 0) low = 0.01; // Ensure positive low
+			}
+			if (low >= high) {
+				// Ensure low is strictly less than high
+				low = high * 0.98;
+				if (low <= 0) low = 0.01;
+			}
+			low = parseFloat(low.toFixed(2));
 
-			const high = Math.max(open, close) + highExtra;
-			const low = Math.min(open, close) - lowExtra;
+			const volume = Math.floor(Math.random() * 5000000) + 1000000; // Random volume between 1M and 6M
 
-			// Random volume between 1M and 20M
-			const volume = Math.floor(1000000 + Math.random() * 19000000);
-
-			// Add data point
-			result.push({
-				Date: new Date(currentDate),
-				Open: parseFloat(open.toFixed(6)),
-				High: parseFloat(high.toFixed(6)),
-				Low: parseFloat(low.toFixed(6)),
-				Close: parseFloat(close.toFixed(6)),
-				Volume: volume
+			data.push({
+				date: new Date(currentDate),
+				open: open,
+				high: high,
+				low: low,
+				close: close,
+				volume: volume
 			});
 
-			// Update current price for next iteration
-			currentPrice = close;
+			lastClose = close;
+			currentDate.setDate(currentDate.getDate() + 1); // Move to the next day
 		}
 
-		return result;
+		console.log(data);
+		return data;
 	}
 
 	// Generate random stock data (60 days starting from Jan 1, 2023)
@@ -96,7 +100,7 @@
 	<h2>Fake stonks</h2>
 
 	<Chart.Root data={combined} margin={{ left: 80, top: 30, right: 30, bottom: 70 }}>
-		<Chart.Line series="aapl" x="Date" y="Close" />
+		<Chart.Line series="aapl" x="date" y="close" />
 		<Chart.Axes.X />
 		<Chart.Axes.Y />
 		<Chart.Layers.Grid axis="vertical" />

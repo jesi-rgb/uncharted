@@ -2,8 +2,7 @@
 	import { chartContext } from '$lib/context.js';
 	import { chartStore, xAxesStore, yAxesStore } from '$lib/stores.js';
 	import { createScale } from '$lib/utils/infer-type.js';
-	import { scaleBand, timeHour, timeHours, timeMonth, timeMonths } from 'd3';
-	import { extent } from 'd3-array';
+	import { timeHour } from 'd3';
 
 	interface Props {
 		x: string;

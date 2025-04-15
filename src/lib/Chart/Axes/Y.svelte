@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { axisLeft, axisRight, select } from 'd3';
-	import type { YAxisProps } from '$lib/types.js';
+	import { axisLeft, axisRight, scaleLog, select } from 'd3';
+	import type { Scale, YAxisProps } from '$lib/types.js';
 	import { chartStore, yAxesStore } from '$lib/stores.js';
 	import { chartContext } from '$lib/context.js';
 
@@ -9,12 +9,17 @@
 	let { margin, width } = $derived($chartStore[id]);
 	let { scale: yScale } = $derived($yAxesStore[id] || { scale: undefined });
 
-	let { right = false, ...rest }: YAxisProps = $props();
+	let { right = false, log = false, ...rest }: YAxisProps = $props();
 
 	let axisId = crypto.randomUUID();
 
 	let axis = $derived.by(() => {
 		if (right) return axisRight(yScale);
+
+		if (log && yScale) {
+			let logScale = scaleLog().domain(yScale.domain()).range(yScale.range());
+			return axisLeft(logScale);
+		}
 
 		return axisLeft(yScale);
 	});
