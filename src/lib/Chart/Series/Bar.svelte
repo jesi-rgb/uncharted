@@ -9,13 +9,10 @@
 		y: string;
 		series?: string;
 		color?: string;
-		patternId?: string;
-		patternAngle?: number;
-		patternSpacing?: number;
-		patternWidth?: number;
-		patternOpacity?: number;
+		fillOpacity?: number;
 		barWidth?: number; // from 0 to 1
-		innerPadding?: number;
+		fill?: string;
+		innerGap?: number;
 		chartId?: string;
 		rest?: SVGRectElement;
 	}
@@ -26,12 +23,9 @@
 		series,
 		barWidth = 30,
 		color = '#69b3a2',
-		patternId = 'diagonal-pattern',
-		patternAngle = 50,
-		patternSpacing = 5,
-		patternWidth = 1,
-		patternOpacity = 0.5,
-		innerPadding: barInnerWidth = 0,
+		fillOpacity = 0.5,
+		fill = '#69b3a2',
+		innerGap: barInnerWidth = 0,
 		...rest
 	}: Props = $props();
 
@@ -99,29 +93,9 @@
 	});
 
 	// Generate a unique ID for this instance's pattern
-	const uniquePatternId = `${patternId}-${Math.random().toString(36).substring(2, 9)}`;
 </script>
 
 <!-- Define the diagonal line pattern -->
-<defs>
-	<pattern
-		id={uniquePatternId}
-		patternUnits="userSpaceOnUse"
-		width={patternSpacing}
-		height={patternSpacing}
-		patternTransform="rotate({patternAngle})"
-	>
-		<line
-			x1="0"
-			y1="0"
-			x2="0"
-			y2={patternSpacing}
-			stroke={color}
-			stroke-width={patternWidth}
-			stroke-opacity={patternOpacity}
-		/>
-	</pattern>
-</defs>
 
 <g class="bar-series">
 	{#if xType === 'categorical'}
@@ -134,7 +108,8 @@
 				y={yPos}
 				height={barHeight}
 				width={xScaleFlavoured.bandwidth()}
-				fill={`url(#${uniquePatternId})`}
+				{fill}
+				fill-opacity={fillOpacity}
 				stroke={color}
 				stroke-width="0.9"
 				{...rest}

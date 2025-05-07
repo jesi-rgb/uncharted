@@ -15,6 +15,7 @@
 	});
 
 	let value = $state(0);
+	const uniquePatternId = `diagonal-pattern-${Math.random().toString(36).substring(2, 9)}`;
 </script>
 
 <div>
@@ -25,7 +26,32 @@
 		</div>
 
 		<Chart.Root data={ageHistogramData} margin={{ left: 50, top: 30, right: 30, bottom: 70 }}>
-			<Chart.Bar x="category" y="value" innerPadding={value} />
+			<defs>
+				<pattern
+					id={uniquePatternId}
+					patternUnits="userSpaceOnUse"
+					width={5}
+					height={1}
+					patternTransform="rotate({50})"
+				>
+					<line
+						x1="0"
+						y1="0"
+						x2="0"
+						y2={5}
+						stroke={'#69b3a2'}
+						stroke-width={1}
+						stroke-opacity={0.5}
+					/>
+				</pattern>
+			</defs>
+			<Chart.Bar
+				x="category"
+				y="value"
+				innerGap={value}
+				fill={`url(#${uniquePatternId})`}
+				fillOpacity={0.9}
+			/>
 			<Chart.Axes.Y />
 			<Chart.Axes.X />
 			<Chart.Layers.Grid />
